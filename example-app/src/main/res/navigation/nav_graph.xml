@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/checkoutFragment">
+
+    <fragment
+        android:id="@+id/checkoutFragment"
+        android:name="com.moolre.example.ui.checkout.CheckoutFragment"
+        android:label="Checkout"
+        tools:layout="@layout/fragment_checkout">
+
+        <action
+            android:id="@+id/action_checkoutFragment_to_paymentResultFragment"
+            app:destination="@id/paymentResultFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/paymentResultFragment"
+        android:name="com.moolre.example.ui.paymentresult.PaymentResultFragment"
+        android:label="Payment Result"
+        tools:layout="@layout/fragment_payment_result">
+
+        <argument
+            android:name="isSuccess"
+            app:argType="boolean" />
+        <argument
+            android:name="reference"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="errorCode"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="errorMessage"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.moolre.example.ui.checkout.CheckoutFragment"
+    android:label="History"
+    tools:layout="@layout/fragment_history" />
+
+</navigation>

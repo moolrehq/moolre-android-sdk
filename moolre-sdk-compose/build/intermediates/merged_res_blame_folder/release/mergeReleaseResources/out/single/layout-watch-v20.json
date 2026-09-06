@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.moolre.sdk.compose.moolre-sdk-compose-release-55:/layout-watch-v20/abc_alert_dialog_button_bar_material.xml",
+        "source": "com.moolre.sdk.compose.moolre-sdk-compose-appcompat-1.7.1-42:/layout-watch-v20/abc_alert_dialog_button_bar_material.xml"
+    },
+    {
+        "merged": "com.moolre.sdk.compose.moolre-sdk-compose-release-55:/layout-watch-v20/abc_alert_dialog_title_material.xml",
+        "source": "com.moolre.sdk.compose.moolre-sdk-compose-appcompat-1.7.1-42:/layout-watch-v20/abc_alert_dialog_title_material.xml"
+    }
+]

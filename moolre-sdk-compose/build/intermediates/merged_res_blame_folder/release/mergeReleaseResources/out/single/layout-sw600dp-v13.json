@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.moolre.sdk.compose.moolre-sdk-compose-release-55:/layout-sw600dp-v13/mtrl_layout_snackbar.xml",
+        "source": "com.moolre.sdk.compose.moolre-sdk-compose-material-1.12.0-46:/layout-sw600dp-v13/mtrl_layout_snackbar.xml"
+    },
+    {
+        "merged": "com.moolre.sdk.compose.moolre-sdk-compose-release-55:/layout-sw600dp-v13/design_layout_snackbar.xml",
+        "source": "com.moolre.sdk.compose.moolre-sdk-compose-material-1.12.0-46:/layout-sw600dp-v13/design_layout_snackbar.xml"
+    }
+]

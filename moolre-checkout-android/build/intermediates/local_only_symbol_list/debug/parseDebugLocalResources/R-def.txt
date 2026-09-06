@@ -1,0 +1,7 @@
+R_DEF: Internal format may change without notice
+local
+id progressBar
+id toolbar
+id webView
+layout activity_moolre_checkout
+style Theme.Moolre.Checkout

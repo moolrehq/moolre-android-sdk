@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Basic Palette (Dark Theme Overrides or Additions if needed) -->
+    <color name="palette_dark_grey_surface">#FF121212</color>
+    <color name="palette_white_70_opacity">#B3FFFFFF</color>
+    <!-- palette_black and palette_white are usually fine as is from the day colors.xml -->
+
+    <!-- Semantic Colors (Dark Theme Values - OVERRIDING light theme definitions) -->
+    <color name="app_color_surface">@color/palette_dark_grey_surface</color>
+    <color name="app_color_on_surface">@color/palette_white</color>
+    <color name="app_color_on_surface_medium_emphasis">@color/palette_white_70_opacity</color>
+    <color name="app_color_background">@color/palette_black</color>
+    <color name="app_color_on_background">@color/palette_white</color>
+    <color name="button_accent_text_icon">#A5D6A7</color> <!-- Example: Lighter Green -->
+    <!-- OR <color name="button_accent_text_icon">@color/brand_teal_200</color> if that's your primary accent -->
+    <!-- Specific UI Colors (Dark Theme Overrides) -->
+    <color name="moolre_orange">#FFFFAB40</color>
+    <color name="moolre_button_text_color">@android:color/white</color> <!-- Text should be light on dark button -->
+    <color name="moolre_button_background_color">@color/palette_dark_grey_surface</color>
+</resources>

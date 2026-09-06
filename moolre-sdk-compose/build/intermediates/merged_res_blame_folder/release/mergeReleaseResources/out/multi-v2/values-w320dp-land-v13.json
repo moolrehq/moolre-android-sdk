@@ -1,0 +1,34 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.moolre.sdk.compose.moolre-sdk-compose-release-55:/values-w320dp-land-v13/values-w320dp-land-v13.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\fresh\\.gradle\\caches\\8.11.1\\transforms\\e0c944562f1b439de9edb665e2436b67\\transformed\\material-1.12.0\\res\\values-w320dp-land-v13\\values-w320dp-land-v13.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,110",
+                        "endColumns": "54,61",
+                        "endOffsets": "105,167"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "com.moolre.sdk.compose.moolre-sdk-compose-mergeReleaseResources-53:/values-w320dp-land-v13/values-w320dp-land-v13.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\fresh\\.gradle\\caches\\8.11.1\\transforms\\e0c944562f1b439de9edb665e2436b67\\transformed\\material-1.12.0\\res\\values-w320dp-land-v13\\values-w320dp-land-v13.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,110",
+                        "endColumns": "54,61",
+                        "endOffsets": "105,167"
+                    }
+                }
+            ]
+        }
+    ]
+}

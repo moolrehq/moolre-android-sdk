@@ -1,0 +1,10 @@
+<resources>
+    <!-- Base application theme for the SDK's internal activities -->
+    <style name="Theme.Moolre.Checkout" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize theme. -->
+        <!-- <item name="colorPrimary">@color/sdk_primary</item> -->
+        <!-- <item name="colorPrimaryVariant">@color/sdk_primary_variant</item> -->
+        <!-- <item name="colorOnPrimary">@color/sdk_on_primary</item> -->
+        <!-- Add other attributes as needed for your checkout screen -->
+    </style>
+</resources>

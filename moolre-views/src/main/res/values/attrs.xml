@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<declare-styleable name="MoolrePayButton">
+   <!-- Attributes for direct payment properties -->
+   <!-- Decimal major units, for example "10.50". Parsed as BigDecimal by the SDK. -->
+   <attr name="amount" format="string" />
+   <attr name="environment">
+      <enum name="sandbox" value="0" />
+      <enum name="live" value="1" />
+   </attr>
+   <attr name="apiUser" format="string" />
+   <attr name="publicKey" format="string" />
+   <attr name="accountNumber" format="string" />
+   <attr name="currency" format="string" />
+   <attr name="email" format="string" />
+   <attr name="reference" format="string" />
+   <attr name="webhookUrl" format="string" />
+   <attr name="redirectUrl" format="string" />
+
+   <!-- Attributes for button appearance -->
+   <attr name="buttonBorderWidth" format="dimension" />
+   <attr name="buttonCornerRadius" format="dimension" />
+   <attr name="showAmountOnButton" format="boolean" />
+   <attr name="buttonBorderColor" format="color" />
+   <attr name="buttonText" format="string" />
+
+   <attr name="buttonTextColor" format="color" />
+   <attr name="buttonBackgroundColor" format="color" />
+   <attr name="buttonIconTint" format="color" />
+
+   <!-- Standard Android attributes you might want to directly support -->
+   <attr name="android:text" />
+</declare-styleable>
+</resources>

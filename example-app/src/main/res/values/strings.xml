@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">example-app</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Strings for PaymentResultFragment -->
+    <string name="payment_successful">Payment Successful</string>
+    <string name="payment_failed">Payment Failed</string>
+
+    <!-- Example: "Reference: 12345XYZ" -->
+    <string name="reference_label">Reference: %1$s</string>
+
+    <!-- Example: "Error (%1$s): %2$s" -->
+    <!-- %1$s will be replaced by args.errorCode -->
+    <!-- %2$s will be replaced by args.errorMessage -->
+    <string name="error_message_format">Error (%1$s): %2$s</string>
+    <string name="back_to_home">Back to Home</string>
+    <string name="checkout">Checkout</string>
+    <string name="history">History</string>
+    <string name="test_pay">Test Pay</string>
+    <string name="remove_item">Remove Item</string>
+</resources>
+

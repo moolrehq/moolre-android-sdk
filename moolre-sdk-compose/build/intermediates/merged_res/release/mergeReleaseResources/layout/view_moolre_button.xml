@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="false"
+    android:focusable="false">
+
+    <androidx.appcompat.widget.AppCompatButton
+    android:id="@+id/payButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="@dimen/moolre_button_min_width"
+    android:minHeight="48dp"
+
+    android:background="@drawable/moolre_button_background"
+    android:elevation="@dimen/moolre_button_elevation"
+
+    android:paddingStart="@dimen/moolre_button_padding_horizontal"
+    android:paddingEnd="@dimen/moolre_button_padding_horizontal"
+    android:paddingTop="@dimen/moolre_button_padding_vertical"
+    android:paddingBottom="@dimen/moolre_button_padding_vertical"
+
+    android:text="@string/moolre_default_pay_button_text"
+    android:textColor="@color/white"
+    android:textSize="@dimen/moolre_button_text_size"
+    android:textStyle="bold"
+    android:fontFamily="sans-serif-medium"
+    android:textAllCaps="false"
+
+    android:drawableStart="@drawable/ic_moolre_logo"
+    android:drawableLeft="@drawable/ic_moolre_logo"
+    android:drawablePadding="@dimen/moolre_button_drawable_padding"
+    android:gravity="center"
+
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="RtlHardcoded" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:elevation="4dp"
+    android:indeterminateTint="@color/white"
+    app:layout_constraintTop_toTopOf="@id/payButton"
+    app:layout_constraintBottom_toBottomOf="@id/payButton"
+    app:layout_constraintStart_toStartOf="@id/payButton"
+    app:layout_constraintEnd_toEndOf="@id/payButton"
+    tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

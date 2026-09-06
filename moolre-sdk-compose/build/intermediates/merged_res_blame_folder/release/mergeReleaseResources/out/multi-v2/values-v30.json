@@ -1,0 +1,34 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.moolre.sdk.compose.moolre-sdk-compose-release-55:/values-v30/values-v30.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\fresh\\.gradle\\caches\\8.11.1\\transforms\\a21db810a8d114f927d964e30656e9f0\\transformed\\material3-release\\res\\values-v30\\values-v30.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "72",
+                        "endOffsets": "123"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "com.moolre.sdk.compose.moolre-sdk-compose-mergeReleaseResources-53:/values-v30/values-v30.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\fresh\\.gradle\\caches\\8.11.1\\transforms\\a21db810a8d114f927d964e30656e9f0\\transformed\\material3-release\\res\\values-v30\\values-v30.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "72",
+                        "endOffsets": "123"
+                    }
+                }
+            ]
+        }
+    ]
+}

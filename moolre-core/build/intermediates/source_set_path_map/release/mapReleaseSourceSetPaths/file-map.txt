@@ -1,0 +1,7 @@
+com.moolre.sdk.core.moolre-core-pngs-0 C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\generated\res\pngs\release
+com.moolre.sdk.core.moolre-core-resValues-1 C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\generated\res\resValues\release
+com.moolre.sdk.core.moolre-core-mergeReleaseResources-2 C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\incremental\release\mergeReleaseResources\merged.dir
+com.moolre.sdk.core.moolre-core-mergeReleaseResources-3 C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\incremental\release\mergeReleaseResources\stripped.dir
+com.moolre.sdk.core.moolre-core-release-4 C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\merged_res\release\mergeReleaseResources
+com.moolre.sdk.core.moolre-core-main-5 C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\src\main\res
+com.moolre.sdk.core.moolre-core-release-6 C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\src\release\res

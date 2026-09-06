@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="moolre_primary">#142a4a</color>
+    <color name="moolre_button_border">#0A1E3C</color>
+    <color name="moolre_button_bg_pressed">#0D243F</color>
+    <color name="moolre_disabled_grey">#CCCCCC</color>
+    <color name="white">#FFFFFF</color>
+    <color name="moolre_button_default_text_color">#FFFFFF</color>
+    <color name="moolre_button_default_background_color">#FF6F00</color>
+    <color name="moolre_button_disabled_background_color">#D3D3D3</color>
+</resources>

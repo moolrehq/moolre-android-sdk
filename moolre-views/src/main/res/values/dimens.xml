@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ <dimen name="moolre_button_corner_radius">8dp</dimen>
+ <dimen name="moolre_button_min_width">200dp</dimen>
+ <dimen name="moolre_button_padding_vertical">10dp</dimen>
+ <dimen name="moolre_button_padding_horizontal">16dp</dimen>
+ <dimen name="moolre_button_drawable_padding">10dp</dimen>
+ <dimen name="moolre_button_text_size">16sp</dimen>
+ <dimen name="moolre_button_elevation">3dp</dimen>
+ <dimen name="moolre_button_default_corner_radius_fallback">8dp</dimen>
+</resources>

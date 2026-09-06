@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.moolre.sdk.MoolrePaymentCoordinatorTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-08-26T19:52:45" hostname="DANITO-PC" time="0.162">
+  <properties/>
+  <testcase name="verifyPayment_returnsSuccessForVerifiedPayment" classname="com.moolre.sdk.MoolrePaymentCoordinatorTest" time="0.145"/>
+  <testcase name="verifyPayment_returnsFailureForUnverifiedPayment" classname="com.moolre.sdk.MoolrePaymentCoordinatorTest" time="0.003"/>
+  <testcase name="verifyPayment_rejectsBlankReference" classname="com.moolre.sdk.MoolrePaymentCoordinatorTest" time="0.002"/>
+  <testcase name="verifyPayment_returnsFailureForMismatchedVerifiedReference" classname="com.moolre.sdk.MoolrePaymentCoordinatorTest" time="0.002"/>
+  <testcase name="initiatePayment_mapsGatewayResponseToCheckoutSession" classname="com.moolre.sdk.MoolrePaymentCoordinatorTest" time="0.003"/>
+  <testcase name="verifyPayment_ignoresAmountAndCurrencyWhenStatusAndReferenceMatch" classname="com.moolre.sdk.MoolrePaymentCoordinatorTest" time="0.001"/>
+  <testcase name="initiatePayment_preservesStructuredGatewayFailure" classname="com.moolre.sdk.MoolrePaymentCoordinatorTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

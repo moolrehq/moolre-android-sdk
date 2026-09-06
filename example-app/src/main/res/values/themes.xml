@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"> <!-- Added tools namespace if not already present -->
+    <!-- Base application theme. -->
+    <style name="Theme.Moolreandroidsdk" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/brand_purple_500</item>
+        <item name="colorPrimaryVariant">@color/brand_purple_700</item>
+        <item name="colorOnPrimary">@color/palette_white</item> <!-- Text on primary -->
+
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/brand_teal_200</item>
+        <item name="colorSecondaryVariant">@color/brand_teal_700</item>
+        <!-- For colorOnSecondary: Default is @color/black.
+             In dark mode, if teal_200 is light enough, black text is fine.
+             If teal_200 itself becomes dark, or if you prefer white text on it for consistency,
+             you would override palette_black (used by colorOnSecondary) in values-night/colors.xml,
+             or create a specific app_color_on_secondary and override that.
+             For now, let's assume @color/palette_black is what you want for light,
+             and you'd override palette_black to palette_white in values-night/colors.xml IF NEEDED.
+        -->
+        <item name="colorOnSecondary">@color/palette_black</item> <!-- Text on secondary -->
+
+        <!-- Error colors -->
+        <!-- Using Material's default error color is often fine.
+             It will adapt to DayNight. If you need custom, define them in colors.xml (day/night)
+             and reference here. -->
+        <item name="colorError">@color/design_default_color_error</item> <!-- from Material library -->
+        <item name="colorOnError">@color/palette_white</item> <!-- Text on error -->
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- For Dark Mode, you might want the status bar to be ?attr/colorSurface
+             if colorPrimaryVariant is too light on a dark theme.
+             This requires API level specific themes or programmatic changes often.
+             For now, this is a common default.
+        -->
+
+        <!-- Material Theme Attributes for Surface, Background, and their "On" colors -->
+        <!-- The DayNight parent theme will use these attributes and automatically
+             select the correct @color/... resource from values/ or values-night/
+             based on the current mode.
+        -->
+        <item name="colorSurface">@color/app_color_surface</item>
+        <item name="colorOnSurface">@color/app_color_on_surface</item>
+        <item name="android:colorBackground">@color/app_color_background</item>
+        <item name="colorOnBackground">@color/app_color_on_background</item>
+
+        <!-- For medium emphasis on surface text, captions etc. -->
+        <!-- Material Components uses attributes like this.
+             The value @color/app_color_on_surface_medium_emphasis will be picked
+             from the appropriate colors.xml (day or night)
+        -->
+<!--        <item name=" मध्यवर्ती색조 강조">@color/app_color_on_surface_medium_emphasis</item>-->
+
+
+        <!-- Default Text Appearances for common elements -->
+        <item name="textAppearanceHeadline5">@style/TextAppearance.Moolre.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.Moolre.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.Moolre.Subtitle1</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.Moolre.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.Moolre.Body2</item> <!-- Uses ?attr/colorOnSecondary -->
+        <item name="textAppearanceButton">@style/TextAppearance.Moolre.Button</item> <!-- Uses ?attr/colorOnPrimary -->
+        <item name="textAppearanceCaption">@style/TextAppearance.Moolre.Caption</item> <!-- Uses ?attr/colorOnSurface with alpha -->
+        <item name="textAppearanceOverline">@style/TextAppearance.Moolre.Overline</item> <!-- Uses ?attr/colorOnSurface -->
+    </style>
+
+    <!-- Text Appearance Styles -->
+    <!-- These now correctly use theme attributes that will resolve to your day/night colors -->
+    <style name="TextAppearance.Moolre.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+    <style name="TextAppearance.Moolre.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+    <style name="TextAppearance.Moolre.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+    <style name="TextAppearance.Moolre.Body1" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+    <style name="TextAppearance.Moolre.Body2" parent="TextAppearance.MaterialComponents.Body2">
+        <!-- By default, Material's Body2 often has a slightly lower emphasis.
+             Overriding to ?attr/colorOnSecondary to tie it to your secondary color set.
+             If you want it to be like Body1, use ?attr/colorOnSurface.
+        -->
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <!-- Or if you want it to use the medium emphasis color:
+        <item name="android:textColor">?attr/ मध्यवर्ती색조 강조</item>
+        -->
+    </style>
+    <style name="TextAppearance.Moolre.Button" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+    <style name="TextAppearance.Moolre.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <!-- Captions are often less prominent. Material's default already handles this well.
+             Overriding textColor to ?attr/colorOnSurface and then applying alpha is one way.
+             Alternatively, you can use ?attr/ मध्यवर्ती색조 강조 directly.
+        -->
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:alpha">0.6</item> <!-- You can adjust this alpha or use ?attr/ मध्यवर्ती색조 강조 -->
+    </style>
+    <style name="TextAppearance.Moolre.Overline" parent="TextAppearance.MaterialComponents.Overline">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+
+    <!-- Custom Text Appearance for List Items -->
+    <style name="TextAppearance.Moolre.ListItem" parent="TextAppearance.Moolre.Subtitle1">
+        <!-- Inherits textColor from TextAppearance.Moolre.Subtitle1 which is ?attr/colorOnSurface -->
+    </style>
+
+    <style name="TextAppearance.Moolre.ListItem.Price" parent="TextAppearance.Moolre.ListItem">
+        <item name="android:textStyle">bold</item>
+        <!-- Optional: Use a different color for price for emphasis -->
+        <!-- <item name="android:textColor">?attr/colorPrimary</item> -->
+    </style>
+
+    <!-- Theme for MainActivity (if specific overrides are ever needed) -->
+    <style name="Theme.Moolreandroidsdk.MainActivity" parent="Theme.Moolreandroidsdk"/>
+</resources>

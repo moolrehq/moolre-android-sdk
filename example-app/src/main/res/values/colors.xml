@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Colors -->
+    <color name="brand_purple_200">#FFBB86FC</color>
+    <color name="brand_purple_500">#FF6200EE</color>
+    <color name="brand_purple_700">#FF3700B3</color>
+    <color name="brand_teal_200">#FF03DAC5</color>
+    <color name="brand_teal_700">#FF018786</color>
+    <color name="button_accent_text_icon">#4CAF50</color>
+
+    <!-- Basic Palette -->
+    <color name="palette_black">#FF000000</color>
+    <color name="palette_white">#FFFFFFFF</color>
+    <color name="palette_grey_light_background">#FFF8F8F8</color>
+    <color name="palette_black_60_opacity">#99000000</color>
+    <!-- Ensure all palette colors from -night also exist here -->
+    <color name="palette_dark_grey_surface">#FF121212</color> <!-- Default to its dark value or a light placeholder -->
+    <color name="palette_white_70_opacity">#B3FFFFFF</color> <!-- Default to its dark value or a light placeholder -->
+
+    <!-- Semantic Colors (Light Theme Values) -->
+    <color name="app_color_surface">@color/palette_white</color>
+    <color name="app_color_on_surface">@color/palette_black</color>
+    <color name="app_color_on_surface_medium_emphasis">@color/palette_black_60_opacity</color>
+    <color name="app_color_background">@color/palette_grey_light_background</color>
+    <color name="app_color_on_background">@color/palette_black</color>
+
+    <!-- Specific UI Colors (Light Theme Values) -->
+    <color name="moolre_orange">#FDB93C</color>
+    <color name="payment_result_background_success">#E8F5E9</color>
+    <color name="payment_result_background_error">#FFEBEE</color>
+    <color name="payment_result_text_success">#2E7D32</color>
+    <color name="payment_result_text_error">#C62828</color>
+    <color name="moolre_button_text_color">@android:color/black</color>
+    <color name="moolre_button_background_color">@android:color/white</color>
+</resources>
