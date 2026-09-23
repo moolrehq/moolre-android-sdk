@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.moolre.sdk.checkout.moolre-checkout-android-release-32:/layout-v26/abc_screen_toolbar.xml",
+        "source": "com.moolre.sdk.checkout.moolre-checkout-android-appcompat-1.7.1-17:/layout-v26/abc_screen_toolbar.xml"
+    },
+    {
+        "merged": "com.moolre.sdk.checkout.moolre-checkout-android-release-32:/layout-v26/mtrl_calendar_month.xml",
+        "source": "com.moolre.sdk.checkout.moolre-checkout-android-material-1.12.0-19:/layout-v26/mtrl_calendar_month.xml"
+    }
+]

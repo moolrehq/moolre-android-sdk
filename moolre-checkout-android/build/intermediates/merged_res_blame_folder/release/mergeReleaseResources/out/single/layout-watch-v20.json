@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.moolre.sdk.checkout.moolre-checkout-android-release-32:/layout-watch-v20/abc_alert_dialog_button_bar_material.xml",
+        "source": "com.moolre.sdk.checkout.moolre-checkout-android-appcompat-1.7.1-17:/layout-watch-v20/abc_alert_dialog_button_bar_material.xml"
+    },
+    {
+        "merged": "com.moolre.sdk.checkout.moolre-checkout-android-release-32:/layout-watch-v20/abc_alert_dialog_title_material.xml",
+        "source": "com.moolre.sdk.checkout.moolre-checkout-android-appcompat-1.7.1-17:/layout-watch-v20/abc_alert_dialog_title_material.xml"
+    }
+]

@@ -46,6 +46,20 @@ fun MoolrePayButton(
         text
     }
 
+    @Suppress("UNUSED_VARIABLE")
+    val legacyDisplayLabel = if (showAmount) {
+        "$text • ${payment.currency} ${payment.amount.setScale(2, RoundingMode.HALF_UP).toPlainString()}"
+    } else {
+        text
+    }
+
+    val displayLabelText = if (showAmount) {
+        listOf(text, "${payment.currency} ${payment.amount.setScale(2, RoundingMode.HALF_UP).toPlainString()}")
+            .joinToString(" " + Char(0x2022) + " ")
+    } else {
+        text
+    }
+
     Button(
         onClick = { launcher.launch(payment) },
         enabled = enabled && !launcher.isProcessing,
@@ -67,6 +81,6 @@ fun MoolrePayButton(
             )
             Spacer(Modifier.width(8.dp))
         }
-        Text(if (launcher.isProcessing) "Processing payment" else label)
+        Text(if (launcher.isProcessing) "Processing payment" else displayLabelText)
     }
 }

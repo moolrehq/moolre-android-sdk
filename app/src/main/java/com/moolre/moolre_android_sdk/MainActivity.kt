@@ -75,18 +75,17 @@ private fun ComposeCheckoutDemo() {
     }
     val config = remember {
         MoolreConfig(
-            environment = MoolreEnvironment.SANDBOX,
-            apiUser = "danitogh",
-            publicKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOjUyNzgzLCJleHAiOjE5NTY1NDU5OTl9.kL1XpBENHyaEBi7Miq_e1KPmpdWVK-MgVuhmur0SRoU",
-            accountNumber = "527830503234",
+            environment = sampleEnvironment(),
+            apiUser = BuildConfig.MOOLRE_API_USER,
+            publicKey = BuildConfig.MOOLRE_PUBLIC_KEY,
+            accountNumber = BuildConfig.MOOLRE_ACCOUNT_NUMBER,
             redirectUrl = "moolre-compose://payment-callback"
         )
     }
     val request = MoolrePaymentRequest(
         amount = totalAmount,
         currency = "GHS",
-        email = "customer@example.com",
-        reference = "compose-demo-payment"
+        email = "customer@example.com"
     )
     val sampleProductNames = remember {
         listOf("Smart Watch", "USB Charger", "Gaming Mouse", "LED Bulb", "Water Bottle", "Backpack")
@@ -202,6 +201,10 @@ private fun ComposeCheckoutDemo() {
         }
     }
 }
+
+private fun sampleEnvironment(): MoolreEnvironment =
+    runCatching { MoolreEnvironment.valueOf(BuildConfig.MOOLRE_ENVIRONMENT.uppercase()) }
+        .getOrDefault(MoolreEnvironment.SANDBOX)
 
 private data class SampleProduct(
     val id: String,

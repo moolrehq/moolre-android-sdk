@@ -1,7 +1,7 @@
 R_DEF: Internal format may change without notice
 local
+color moolre_checkout_toolbar
+drawable ic_checkout_close
 id progressBar
-id toolbar
-id webView
 layout activity_moolre_checkout
 style Theme.Moolre.Checkout

@@ -18,6 +18,7 @@ class MoolrePaymentLauncherStateTest {
     fun saver_restoresPendingPaymentAcrossRecreation() {
         val state = MoolrePaymentLauncherState(
             isProcessing = true,
+            retryReference = "order-42",
             pendingPaymentParams = PaymentParams(
                 amount = BigDecimal("12.50"),
                 environment = MoolreEnvironment.SANDBOX,
@@ -42,6 +43,7 @@ class MoolrePaymentLauncherStateTest {
         assertEquals(BigDecimal("12.50"), restored.pendingPaymentParams?.amount)
         assertEquals(MoolreEnvironment.SANDBOX, restored.pendingPaymentParams?.environment)
         assertEquals("order-42", restored.pendingPaymentParams?.reference)
+        assertEquals("order-42", restored.retryReference)
     }
 
     @Test

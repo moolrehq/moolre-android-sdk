@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.moolre.sdk.checkout.moolre-checkout-android-release-32:/animator-v21/design_appbar_state_list_animator.xml",
+        "source": "com.moolre.sdk.checkout.moolre-checkout-android-material-1.12.0-19:/animator-v21/design_appbar_state_list_animator.xml"
+    },
+    {
+        "merged": "com.moolre.sdk.checkout.moolre-checkout-android-release-32:/animator-v21/m3_appbar_state_list_animator.xml",
+        "source": "com.moolre.sdk.checkout.moolre-checkout-android-material-1.12.0-19:/animator-v21/m3_appbar_state_list_animator.xml"
+    }
+]

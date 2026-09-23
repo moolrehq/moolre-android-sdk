@@ -5,13 +5,20 @@ import com.moolre.sdk.model.MoolreEnvironment
 import com.moolre.sdk.model.PaymentParams
 import com.moolre.sdk.utils.Constants
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
 
 /**
  * Coordinates payment initiation and verification without depending on a UI toolkit.
  */
 class MoolrePaymentCoordinator(
-    private val gateway: MoolrePaymentGateway
+    private val gateway: MoolrePaymentGateway,
+    private val verificationAttempts: Int = 3,
+    private val verificationDelayMillis: Long = 500L
 ) {
+    init {
+        require(verificationAttempts >= 1) { "Verification attempts must be at least 1." }
+        require(verificationDelayMillis >= 0) { "Verification delay cannot be negative." }
+    }
     suspend fun initiatePayment(params: PaymentParams): Result<MoolreCheckoutSession> {
         return try {
             val response = gateway.initiatePayment(params)
@@ -19,7 +26,8 @@ class MoolrePaymentCoordinator(
                 MoolreCheckoutSession(
                     authorizationUrl = response.authorizationUrl,
                     reference = response.reference,
-                    redirectUrl = params.redirect
+                    redirectUrl = params.redirect,
+                    externalReference = params.reference
                 )
             )
         } catch (error: CancellationException) {
@@ -30,15 +38,22 @@ class MoolrePaymentCoordinator(
     }
 
     /**
-     * Verifies a payment using a successful gateway status and an exact transaction-reference match.
+     * Verifies a payment using a successful gateway status and an exact external-reference match.
      * Amount and currency are intentionally not compared by this V1 client-side check.
      */
     suspend fun verifyPayment(
         params: PaymentParams,
-        reference: String
+        redirectReference: String
     ): MoolrePaymentResult {
+        if (redirectReference.isBlank()) {
+            return MoolrePaymentResult.Failure(
+                code = Constants.ERROR_MISSING_REFERENCE,
+                message = "Payment reference cannot be blank."
+            )
+        }
+
         return verifyPayment(
-            reference = reference,
+            reference = params.reference,
             environment = params.environment,
             apiUser = params.apiUser,
             publicKey = params.publicKey,
@@ -61,25 +76,36 @@ class MoolrePaymentCoordinator(
         }
 
         return try {
-            val verification = gateway.verifyPayment(
+            var verification = gateway.verifyPayment(
                 reference = reference,
                 environment = environment,
                 apiUser = apiUser,
                 publicKey = publicKey,
                 accountNumber = accountNumber
             )
-            if (!verification.isSuccessful) {
-                MoolrePaymentResult.Failure(
+            repeat(verificationAttempts - 1) {
+                if (verification.status == 1 && verification.transactionStatus != 1) {
+                    delay(verificationDelayMillis)
+                    verification = gateway.verifyPayment(
+                        reference = reference,
+                        environment = environment,
+                        apiUser = apiUser,
+                        publicKey = publicKey,
+                        accountNumber = accountNumber
+                    )
+                }
+            }
+
+            when {
+                !verification.isSuccessful -> MoolrePaymentResult.Failure(
                     code = Constants.ERROR_VERIFICATION_FAILED,
                     message = "Payment verification failed."
                 )
-            } else if (verification.reference != reference) {
-                MoolrePaymentResult.Failure(
+                verification.reference != reference -> MoolrePaymentResult.Failure(
                     code = Constants.ERROR_REFERENCE_MISMATCH,
-                    message = "Verified payment reference did not match the requested reference."
+                    message = "Verified external reference did not match the payment request."
                 )
-            } else {
-                MoolrePaymentResult.Success(reference, verification)
+                else -> MoolrePaymentResult.Success(reference, verification)
             }
         } catch (error: CancellationException) {
             throw error

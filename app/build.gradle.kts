@@ -1,9 +1,22 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use(::load)
+}
+
+fun localProperty(name: String, default: String): String =
+    localProperties.getProperty(name, default)
+
+fun String.toBuildConfigLiteral(): String =
+    replace("\\", "\\\\").replace("\"", "\\\"")
 
 android {
     namespace = "com.moolre.moolre_android_sdk"
@@ -16,7 +29,35 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        buildConfigField(
+            "String",
+            "MOOLRE_ENVIRONMENT",
+            "\"${localProperty("moolre.environment", "SANDBOX").toBuildConfigLiteral()}\""
+        )
+        buildConfigField(
+            "String",
+            "MOOLRE_API_USER",
+            "\"${localProperty("moolre.apiUser", "replace-with-your-sandbox-api-user").toBuildConfigLiteral()}\""
+        )
+        buildConfigField(
+            "String",
+            "MOOLRE_PUBLIC_KEY",
+            "\"${localProperty("moolre.publicKey", "replace-with-your-sandbox-public-key").toBuildConfigLiteral()}\""
+        )
+        buildConfigField(
+            "String",
+            "MOOLRE_ACCOUNT_NUMBER",
+            "\"${localProperty("moolre.accountNumber", "replace-with-your-sandbox-account-number").toBuildConfigLiteral()}\""
+        )
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Must match the redirectUrl ("moolre-compose://payment-callback") passed to the
+        // Compose payment launcher in MainActivity, so MoolreCheckoutActivity's intent-filter
+        // catches the Custom Tabs redirect back into the app. Required even when using the
+        // SDK's default redirectUrl - see moolre-checkout-android/README.md.
+        manifestPlaceholders["moolreRedirectScheme"] = "moolre-compose"
+        manifestPlaceholders["moolreRedirectHost"] = "payment-callback"
     }
 
     buildTypes {
@@ -37,6 +78,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

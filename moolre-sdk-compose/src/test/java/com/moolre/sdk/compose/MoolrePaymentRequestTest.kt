@@ -5,6 +5,8 @@ import com.moolre.sdk.model.MoolreEnvironment
 import com.moolre.sdk.model.MoolrePaymentRequest
 import com.moolre.sdk.model.toPaymentParams
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.math.BigDecimal
 
@@ -49,6 +51,32 @@ class MoolrePaymentRequestTest {
 
         assertEquals("https://example.com/custom-webhook", params.callback)
         assertEquals("moolre://custom-callback", params.redirect)
+    }
+
+    @Test
+    fun `generates a new reference for every conversion when omitted`() {
+        val request = MoolrePaymentRequest(
+            amount = BigDecimal("5.00"),
+            email = "customer@example.com"
+        )
+
+        val firstReference = request.toPaymentParams(config).reference
+        val secondReference = request.toPaymentParams(config).reference
+
+        assertTrue(firstReference.startsWith("moolre-"))
+        assertTrue(secondReference.startsWith("moolre-"))
+        assertNotEquals(firstReference, secondReference)
+    }
+
+    @Test
+    fun `preserves an explicit merchant reference`() {
+        val reference = MoolrePaymentRequest(
+            amount = BigDecimal("5.00"),
+            email = "customer@example.com",
+            reference = "order-1001"
+        ).toPaymentParams(config).reference
+
+        assertEquals("order-1001", reference)
     }
 
     @Test(expected = IllegalArgumentException::class)

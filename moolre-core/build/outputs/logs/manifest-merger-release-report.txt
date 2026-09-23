@@ -1,16 +1,16 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest17935789143347912044.xml:2:13-83
-INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest17935789143347912044.xml:2:13-83
+ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest267753249508295446.xml:2:13-83
+INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest267753249508295446.xml:2:13-83
 	package
-		INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest17935789143347912044.xml
+		INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest267753249508295446.xml
 	xmlns:android
-		ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest17935789143347912044.xml:2:23-81
+		ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest267753249508295446.xml:2:23-81
 uses-sdk
-INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest17935789143347912044.xml reason: use-sdk injection requested
-INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest17935789143347912044.xml
-INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest17935789143347912044.xml
+INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest267753249508295446.xml reason: use-sdk injection requested
+INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest267753249508295446.xml
+INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest267753249508295446.xml
 	android:targetSdkVersion
-		INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest17935789143347912044.xml
+		INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest267753249508295446.xml
 	android:minSdkVersion
-		INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest17935789143347912044.xml
+		INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-core\build\intermediates\tmp\ProcessLibraryManifest\release\tempAndroidManifest267753249508295446.xml

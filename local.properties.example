@@ -1,0 +1,16 @@
+# Copy this file to local.properties in the SDK root. local.properties is
+# git-ignored and must never be committed.
+#
+# The Compose sample (app) and XML sample (example-app) both read this same
+# file. Replace every placeholder with credentials from one Moolre environment.
+# Keep SANDBOX for testing:
+moolre.environment=SANDBOX
+moolre.apiUser=replace-with-your-sandbox-api-user
+moolre.publicKey=replace-with-your-sandbox-public-key
+moolre.accountNumber=replace-with-your-sandbox-account-number
+#
+# For production, change all four values together:
+# moolre.environment=LIVE
+# moolre.apiUser=replace-with-your-live-api-user
+# moolre.publicKey=replace-with-your-live-public-key
+# moolre.accountNumber=replace-with-your-live-account-number

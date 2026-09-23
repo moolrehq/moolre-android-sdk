@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "com.moolre.sdk.checkout.moolre-checkout-android-release-32:/layout-v21/notification_template_custom_big.xml",
+        "source": "com.moolre.sdk.checkout.moolre-checkout-android-core-1.16.0-28:/layout-v21/notification_template_custom_big.xml"
+    },
+    {
+        "merged": "com.moolre.sdk.checkout.moolre-checkout-android-release-32:/layout-v21/notification_action.xml",
+        "source": "com.moolre.sdk.checkout.moolre-checkout-android-core-1.16.0-28:/layout-v21/notification_action.xml"
+    },
+    {
+        "merged": "com.moolre.sdk.checkout.moolre-checkout-android-release-32:/layout-v21/notification_template_icon_group.xml",
+        "source": "com.moolre.sdk.checkout.moolre-checkout-android-core-1.16.0-28:/layout-v21/notification_template_icon_group.xml"
+    },
+    {
+        "merged": "com.moolre.sdk.checkout.moolre-checkout-android-release-32:/layout-v21/notification_action_tombstone.xml",
+        "source": "com.moolre.sdk.checkout.moolre-checkout-android-core-1.16.0-28:/layout-v21/notification_action_tombstone.xml"
+    }
+]

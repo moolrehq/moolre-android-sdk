@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "com.moolre.sdk.checkout.moolre-checkout-android-release-32:/color-night-v8/material_timepicker_button_stroke.xml",
+        "source": "com.moolre.sdk.checkout.moolre-checkout-android-material-1.12.0-19:/color-night-v8/material_timepicker_button_stroke.xml"
+    },
+    {
+        "merged": "com.moolre.sdk.checkout.moolre-checkout-android-release-32:/color-night-v8/material_timepicker_clockface.xml",
+        "source": "com.moolre.sdk.checkout.moolre-checkout-android-material-1.12.0-19:/color-night-v8/material_timepicker_clockface.xml"
+    },
+    {
+        "merged": "com.moolre.sdk.checkout.moolre-checkout-android-release-32:/color-night-v8/material_timepicker_modebutton_tint.xml",
+        "source": "com.moolre.sdk.checkout.moolre-checkout-android-material-1.12.0-19:/color-night-v8/material_timepicker_modebutton_tint.xml"
+    }
+]

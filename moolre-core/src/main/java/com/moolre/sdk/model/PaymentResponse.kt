@@ -3,7 +3,7 @@ package com.moolre.sdk.model
 /**
  * Data class representing payment response.
  * @property authorizationUrl URL to redirect user for payment
- * @property reference Unique transaction reference
+ * @property reference Moolre-generated transaction reference returned by the link API
  */
 data class PaymentResponse(
     val authorizationUrl: String,

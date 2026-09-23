@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.moolre.sdk.compose.MoolrePaymentLauncherStateTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-08-26T19:52:50" hostname="DANITO-PC" time="0.076">
+<testsuite name="com.moolre.sdk.compose.MoolrePaymentLauncherStateTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-09-22T10:53:35" hostname="DANITO-PC" time="0.084">
   <properties/>
-  <testcase name="saver_restoresPendingPaymentAcrossRecreation" classname="com.moolre.sdk.compose.MoolrePaymentLauncherStateTest" time="0.076"/>
+  <testcase name="saver_restoresPendingPaymentAcrossRecreation" classname="com.moolre.sdk.compose.MoolrePaymentLauncherStateTest" time="0.083"/>
   <testcase name="saver_doesNotRestoreProcessingWithoutPendingPayment" classname="com.moolre.sdk.compose.MoolrePaymentLauncherStateTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

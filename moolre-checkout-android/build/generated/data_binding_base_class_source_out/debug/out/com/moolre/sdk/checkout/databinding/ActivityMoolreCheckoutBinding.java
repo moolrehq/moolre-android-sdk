@@ -4,11 +4,9 @@ package com.moolre.sdk.checkout.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
@@ -24,18 +22,10 @@ public final class ActivityMoolreCheckoutBinding implements ViewBinding {
   @NonNull
   public final ProgressBar progressBar;
 
-  @NonNull
-  public final Toolbar toolbar;
-
-  @NonNull
-  public final WebView webView;
-
   private ActivityMoolreCheckoutBinding(@NonNull ConstraintLayout rootView,
-      @NonNull ProgressBar progressBar, @NonNull Toolbar toolbar, @NonNull WebView webView) {
+      @NonNull ProgressBar progressBar) {
     this.rootView = rootView;
     this.progressBar = progressBar;
-    this.toolbar = toolbar;
-    this.webView = webView;
   }
 
   @Override
@@ -71,20 +61,7 @@ public final class ActivityMoolreCheckoutBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.toolbar;
-      Toolbar toolbar = ViewBindings.findChildViewById(rootView, id);
-      if (toolbar == null) {
-        break missingId;
-      }
-
-      id = R.id.webView;
-      WebView webView = ViewBindings.findChildViewById(rootView, id);
-      if (webView == null) {
-        break missingId;
-      }
-
-      return new ActivityMoolreCheckoutBinding((ConstraintLayout) rootView, progressBar, toolbar,
-          webView);
+      return new ActivityMoolreCheckoutBinding((ConstraintLayout) rootView, progressBar);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

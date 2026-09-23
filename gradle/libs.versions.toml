@@ -10,6 +10,7 @@ appcompat = "1.7.1"
 constraintlayout = "2.0.1"
 material = "1.12.0"
 okhttp = "4.12.0"
+browser = "1.8.0"
 navigation = "2.9.2"
 androidx-activity = "1.10.1"
 compose-ui = "1.8.3"
@@ -51,6 +52,7 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 
 # Networking
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 

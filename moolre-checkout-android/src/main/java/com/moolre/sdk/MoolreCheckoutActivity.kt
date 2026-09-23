@@ -1,20 +1,32 @@
 package com.moolre.sdk
 
-import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import com.moolre.sdk.checkout.databinding.ActivityMoolreCheckoutBinding
+import com.moolre.sdk.checkout.R
 import com.moolre.sdk.utils.Constants
 
+/**
+ * Launches checkout in a Chrome Custom Tab and catches the payment redirect via its
+ * singleTask intent-filter (see the SDK's AndroidManifest.xml). A Custom Tab, rather than
+ * an embedded WebView, is used because WebView unconditionally sends an X-Requested-With
+ * header identifying the host app, which checkout/payment backends commonly use to block
+ * embedded WebView traffic.
+ *
+ * Presented as a partial-height ("bottom sheet") Custom Tab, themed to the Moolre brand color,
+ * so it reads as part of the checkout flow rather than a jump out to the browser.
+ */
 class MoolreCheckoutActivity : AppCompatActivity() {
 
     companion object {
@@ -22,36 +34,48 @@ class MoolreCheckoutActivity : AppCompatActivity() {
             context: Context,
             checkoutUrl: String,
             redirectUrl: String,
-            expectedReference: String? = null
+            expectedReferences: List<String> = emptyList()
         ): Intent {
             return Intent(context, MoolreCheckoutActivity::class.java).apply {
                 putExtra(MoolreCheckoutExtras.CHECKOUT_URL, checkoutUrl)
                 putExtra(MoolreCheckoutExtras.REDIRECT_URL, redirectUrl)
-                putExtra(MoolreCheckoutExtras.EXPECTED_REFERENCE, expectedReference)
+                putStringArrayListExtra(
+                    MoolreCheckoutExtras.EXPECTED_REFERENCES,
+                    ArrayList(expectedReferences.filter(String::isNotBlank).distinct())
+                )
             }
         }
+
+        private const val LOG_TAG = "MoolreCheckout"
+        private const val PARTIAL_HEIGHT_FRACTION = 0.9
+        private const val TOOLBAR_CORNER_RADIUS_DP = 16
     }
 
     private lateinit var binding: ActivityMoolreCheckoutBinding
+    private lateinit var checkoutUri: Uri
     private lateinit var redirectUri: Uri
-    private var expectedReference: String? = null
+    private var expectedReferences: Set<String> = emptySet()
     private var resultDelivered = false
+    private var customTabLaunched = false
 
-    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMoolreCheckoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val checkoutUrl = intent.getStringExtra(MoolreCheckoutExtras.CHECKOUT_URL)
-        val checkoutUri = checkoutUrl?.let(Uri::parse)
-        if (checkoutUri == null || checkoutUri.scheme != "https" || checkoutUri.host.isNullOrBlank()) {
+        val parsedCheckoutUri = checkoutUrl?.let(Uri::parse)
+        if (parsedCheckoutUri == null ||
+            !parsedCheckoutUri.scheme.equals("https", ignoreCase = true) ||
+            parsedCheckoutUri.host.isNullOrBlank()
+        ) {
             finishWithFailure(
                 Constants.ERROR_INVALID_CHECKOUT_URL,
                 "Checkout URL must use HTTPS and include a host."
             )
             return
         }
+        checkoutUri = parsedCheckoutUri
 
         redirectUri = intent.getStringExtra(MoolreCheckoutExtras.REDIRECT_URL)
             ?.let(Uri::parse)
@@ -63,15 +87,15 @@ class MoolreCheckoutActivity : AppCompatActivity() {
             )
             return
         }
-        expectedReference = intent.getStringExtra(MoolreCheckoutExtras.EXPECTED_REFERENCE)
+        expectedReferences = intent.getStringArrayListExtra(MoolreCheckoutExtras.EXPECTED_REFERENCES)
+            ?.filter(String::isNotBlank)
+            ?.toSet()
+            .orEmpty()
+
         resultDelivered = savedInstanceState?.getBoolean(MoolreCheckoutExtras.RESULT_DELIVERED) ?: false
+        customTabLaunched = savedInstanceState?.getBoolean(MoolreCheckoutExtras.CUSTOM_TAB_LAUNCHED) ?: false
 
         configureBackHandling()
-        binding.toolbar.setNavigationOnClickListener { finishAsCancelled() }
-        configureWebView(
-            checkoutUrl = checkoutUri.toString(),
-            savedWebViewState = savedInstanceState?.getBundle(MoolreCheckoutExtras.WEB_VIEW_STATE)
-        )
     }
 
     private fun configureBackHandling() {
@@ -79,97 +103,75 @@ class MoolreCheckoutActivity : AppCompatActivity() {
             this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (binding.webView.canGoBack()) {
-                        binding.webView.goBack()
-                    } else {
-                        finishAsCancelled()
-                    }
+                    finishAsCancelled()
                 }
             }
         )
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun configureWebView(checkoutUrl: String, savedWebViewState: Bundle?) {
-        binding.webView.apply {
-            settings.javaScriptEnabled = true
-            settings.domStorageEnabled = true
-            settings.allowFileAccess = false
-            settings.allowContentAccess = false
-            settings.setSupportMultipleWindows(false)
-            webViewClient = object : WebViewClient() {
-                override fun onPageFinished(view: WebView?, url: String?) {
-                    super.onPageFinished(view, url)
-                    binding.progressBar.visibility = View.GONE
-                    url?.let { handleNavigation(Uri.parse(it)) }
-                }
+    /**
+     * The Custom Tab is launched on the first onResume rather than onCreate: onCreate is
+     * followed immediately by an onResume/onPause pair as the tab takes focus, and a *second*
+     * onResume only happens once the user returns to this activity - either because the
+     * redirect was already handled in onNewIntent (resultDelivered is true by then) or because
+     * they backed out of the tab without completing checkout.
+     */
+    override fun onResume() {
+        super.onResume()
+        if (resultDelivered) return
+        if (customTabLaunched) {
+            finishAsCancelled()
+        } else {
+            customTabLaunched = true
+            launchCheckout()
+        }
+    }
 
-                override fun onReceivedError(
-                    view: WebView?,
-                    request: WebResourceRequest?,
-                    error: WebResourceError?
-                ) {
-                    super.onReceivedError(view, request, error)
-                    if (request?.isForMainFrame != false) {
-                        finishWithFailure(
-                            Constants.ERROR_WEBVIEW,
-                            error?.description?.toString() ?: "Payment page failed to load."
-                        )
-                    }
-                }
+    private fun launchCheckout() {
+        debugLog("authorization_url=$checkoutUri")
+        try {
+            buildCustomTabsIntent().launchUrl(this, checkoutUri)
+        } catch (e: ActivityNotFoundException) {
+            finishWithFailure(Constants.ERROR_LAUNCH_FAILED, "No browser available to open checkout.")
+        }
+    }
 
-                override fun onReceivedHttpError(
-                    view: WebView?,
-                    request: WebResourceRequest?,
-                    errorResponse: android.webkit.WebResourceResponse?
-                ) {
-                    super.onReceivedHttpError(view, request, errorResponse)
-                    if (request?.isForMainFrame == true && errorResponse != null && errorResponse.statusCode >= 400) {
-                        finishWithFailure(
-                            Constants.ERROR_WEBVIEW,
-                            "Payment page returned HTTP ${errorResponse.statusCode}."
-                        )
-                    }
-                }
+    private fun buildCustomTabsIntent(): CustomTabsIntent {
+        val toolbarColor = ContextCompat.getColor(this, R.color.moolre_checkout_toolbar)
+        val colorSchemeParams = CustomTabColorSchemeParams.Builder()
+            .setToolbarColor(toolbarColor)
+            .setNavigationBarColor(toolbarColor)
+            .build()
+        val closeButtonIcon = ContextCompat.getDrawable(this, R.drawable.ic_checkout_close)?.toBitmap()
+        val partialHeightPx = (resources.displayMetrics.heightPixels * PARTIAL_HEIGHT_FRACTION).toInt()
 
-                override fun shouldOverrideUrlLoading(
-                    view: WebView?,
-                    request: WebResourceRequest?
-                ): Boolean {
-                    val uri = request?.url ?: return false
-                    return handleNavigation(uri)
-                }
-            }
-            if (savedWebViewState == null || restoreState(savedWebViewState) == null) {
-                loadUrl(checkoutUrl)
-            }
+        val builder = CustomTabsIntent.Builder()
+            .setDefaultColorSchemeParams(colorSchemeParams)
+            .setShowTitle(true)
+            .setToolbarCornerRadiusDp(TOOLBAR_CORNER_RADIUS_DP)
+            .setInitialActivityHeightPx(partialHeightPx, CustomTabsIntent.ACTIVITY_HEIGHT_ADJUSTABLE)
+        closeButtonIcon?.let(builder::setCloseButtonIcon)
+        return builder.build()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        val uri = intent.data ?: return
+        if (matchesRedirect(uri)) {
+            completeFromCallback(uri)
+        } else {
+            finishWithFailure(
+                Constants.ERROR_UNSUPPORTED_REDIRECT,
+                "Checkout redirected to an unsupported URL."
+            )
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val webViewState = Bundle()
-        binding.webView.saveState(webViewState)
-        outState.putBundle(MoolreCheckoutExtras.WEB_VIEW_STATE, webViewState)
         outState.putBoolean(MoolreCheckoutExtras.RESULT_DELIVERED, resultDelivered)
-    }
-
-    private fun handleNavigation(uri: Uri): Boolean {
-        if (matchesRedirect(uri)) {
-            completeFromCallback(uri)
-            return true
-        }
-
-        return when (uri.scheme?.lowercase()) {
-            "https" -> false
-            else -> {
-                finishWithFailure(
-                    Constants.ERROR_UNSUPPORTED_REDIRECT,
-                    "Checkout redirected to an unsupported URL."
-                )
-                true
-            }
-        }
+        outState.putBoolean(MoolreCheckoutExtras.CUSTOM_TAB_LAUNCHED, customTabLaunched)
     }
 
     private fun matchesRedirect(uri: Uri): Boolean {
@@ -188,7 +190,7 @@ class MoolreCheckoutActivity : AppCompatActivity() {
             )
             return
         }
-        if (!expectedReference.isNullOrBlank() && reference != expectedReference) {
+        if (expectedReferences.isNotEmpty() && reference !in expectedReferences) {
             finishWithFailure(
                 Constants.ERROR_REFERENCE_MISMATCH,
                 "Checkout redirect reference did not match the prepared payment."
@@ -206,6 +208,12 @@ class MoolreCheckoutActivity : AppCompatActivity() {
         finishWithFailure(Constants.ERROR_USER_CANCELLED, "Payment was cancelled by the user.")
     }
 
+    private fun debugLog(message: String) {
+        if ((applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0) {
+            Log.d(LOG_TAG, message)
+        }
+    }
+
     private fun finishWithFailure(code: String, message: String) {
         finishWithResult(
             resultCode = RESULT_CANCELED,
@@ -218,16 +226,7 @@ class MoolreCheckoutActivity : AppCompatActivity() {
     private fun finishWithResult(resultCode: Int, resultIntent: Intent) {
         if (resultDelivered) return
         resultDelivered = true
-        binding.webView.stopLoading()
         setResult(resultCode, resultIntent)
         finish()
-    }
-
-    override fun onDestroy() {
-        binding.webView.apply {
-            stopLoading()
-            destroy()
-        }
-        super.onDestroy()
     }
 }

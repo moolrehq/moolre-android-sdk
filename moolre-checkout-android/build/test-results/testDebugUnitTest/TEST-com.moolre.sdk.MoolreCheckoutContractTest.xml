@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.moolre.sdk.MoolreCheckoutContractTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-08-26T19:52:44" hostname="DANITO-PC" time="0.037">
+<testsuite name="com.moolre.sdk.MoolreCheckoutContractTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-09-22T16:28:44" hostname="DANITO-PC" time="0.038">
   <properties/>
-  <testcase name="parseResult_returnsCompletedReference" classname="com.moolre.sdk.MoolreCheckoutContractTest" time="0.032"/>
+  <testcase name="parseResult_returnsCompletedReference" classname="com.moolre.sdk.MoolreCheckoutContractTest" time="0.024"/>
+  <testcase name="http404_isClassifiedAsMissingCheckoutPage" classname="com.moolre.sdk.MoolreCheckoutContractTest" time="0.008"/>
   <testcase name="parseResult_mapsUserCancellation" classname="com.moolre.sdk.MoolreCheckoutContractTest" time="0.002"/>
-  <testcase name="parseResult_preservesCheckoutFailure" classname="com.moolre.sdk.MoolreCheckoutContractTest" time="0.002"/>
-  <testcase name="parseResult_rejectsSuccessfulResultWithoutReference" classname="com.moolre.sdk.MoolreCheckoutContractTest" time="0.001"/>
+  <testcase name="statusBelow400_doesNotCreateFailure" classname="com.moolre.sdk.MoolreCheckoutContractTest" time="0.0"/>
+  <testcase name="parseResult_preservesCheckoutFailure" classname="com.moolre.sdk.MoolreCheckoutContractTest" time="0.001"/>
+  <testcase name="parseResult_rejectsSuccessfulResultWithoutReference" classname="com.moolre.sdk.MoolreCheckoutContractTest" time="0.0"/>
+  <testcase name="otherHttpErrors_remainWebViewFailures" classname="com.moolre.sdk.MoolreCheckoutContractTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

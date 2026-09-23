@@ -10,9 +10,9 @@ import com.moolre.sdk.utils.Constants
 internal object MoolreCheckoutExtras {
     const val CHECKOUT_URL = "extra_checkout_url"
     const val REDIRECT_URL = "extra_redirect_url"
-    const val EXPECTED_REFERENCE = "extra_expected_reference"
-    const val WEB_VIEW_STATE = "extra_web_view_state"
+    const val EXPECTED_REFERENCES = "extra_expected_references"
     const val RESULT_DELIVERED = "extra_result_delivered"
+    const val CUSTOM_TAB_LAUNCHED = "extra_custom_tab_launched"
     const val REFERENCE = "reference"
     const val ERROR_CODE = "error_code"
     const val ERROR_MESSAGE = "error_message"
@@ -29,7 +29,10 @@ class MoolreCheckoutContract :
             context = context,
             checkoutUrl = input.authorizationUrl,
             redirectUrl = input.redirectUrl,
-            expectedReference = input.reference
+            expectedReferences = buildList {
+                add(input.reference)
+                input.externalReference?.let(::add)
+            }
         )
     }
 

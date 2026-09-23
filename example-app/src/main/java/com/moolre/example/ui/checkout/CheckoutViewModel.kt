@@ -3,6 +3,7 @@ package com.moolre.example.ui.checkout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.moolre.example.BuildConfig
 import com.moolre.example.data.Product
 import com.moolre.sdk.model.MoolreEnvironment
 import java.math.BigDecimal
@@ -20,17 +21,17 @@ class CheckoutViewModel : ViewModel() {
     val products: LiveData<List<Product>> = _products
     private val _totalAmount = MutableLiveData<BigDecimal>(BigDecimal.ZERO)
     val totalAmount: LiveData<BigDecimal> = _totalAmount
-    val customReference: String
-        get() = "my-txn-${Date().time}" // Generates a new one each time it's accessed
 
-    val environment = MoolreEnvironment.SANDBOX
-    val apiUser = "replace-with-your-api-user"
-    val publicKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOjUyNzgzLCJleHAiOjE5MjUwMDk5OTl9.E34EwypYvzniaEoOoRKfkdFgCWvkU7SHo6jfOsoW0O8"
-    val accountNumber = "527830503234"
+    val environment = runCatching {
+        MoolreEnvironment.valueOf(BuildConfig.MOOLRE_ENVIRONMENT.uppercase())
+    }.getOrDefault(MoolreEnvironment.SANDBOX)
+    val apiUser = BuildConfig.MOOLRE_API_USER
+    val publicKey = BuildConfig.MOOLRE_PUBLIC_KEY
+    val accountNumber = BuildConfig.MOOLRE_ACCOUNT_NUMBER
 
     val email = "customer@example.com"
     val webhookUrl: String? = null
-    val redirectUrl = "moolre-example://payment-callback" // Your app's return URI
+    val redirectUrl = "moolre-example://payment-callback"
 
     private val sampleProductNames = listOf(
         "Smart Watch", "USB Charger", "Gaming Mouse",

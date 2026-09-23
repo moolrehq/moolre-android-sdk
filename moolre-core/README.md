@@ -15,6 +15,25 @@ dependencies {
 }
 ```
 
+## Credentials and environments
+
+Choose one environment for the entire request. The API user, public key,
+account number, payment references, and status checks must all belong to that
+environment:
+
+```kotlin
+val config = MoolreConfig(
+    environment = MoolreEnvironment.SANDBOX, // use LIVE for production
+    apiUser = "your-sandbox-api-user",
+    publicKey = "your-sandbox-public-key",
+    accountNumber = "your-sandbox-account-number"
+)
+```
+
+`local.properties` is only used by this repository's sample apps. A published
+library does not read it; your host app supplies these values through
+`MoolreConfig` or the View button properties. Never commit real credentials.
+
 ## Advanced usage
 
 ```kotlin
@@ -51,8 +70,11 @@ transport.
 
 ## Verification policy
 
-The coordinator reports success only when the status envelope is `status == 1`,
-the transaction status is successful, and `externalref` exactly matches the
-requested reference. Amount and currency are exposed in `VerificationResponse`
-but are not compared by this V1 client. Merchants must perform order-level
-checks on their server before fulfilment.
+The coordinator sends the original `params.reference` as the status API's
+external-reference lookup. It reports success only when the status envelope is
+`status == 1`, the transaction status is successful, and the returned
+`externalref` exactly matches `params.reference`. The redirect reference is
+validated by the checkout runtime and may be Moolre's generated transaction
+reference. Amount and currency are exposed in `VerificationResponse` but are
+not compared by this V1 client. Merchants must perform order-level checks on
+their server before fulfilment.

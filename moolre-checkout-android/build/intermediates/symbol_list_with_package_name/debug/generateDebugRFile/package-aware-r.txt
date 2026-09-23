@@ -1,6 +1,6 @@
 com.moolre.sdk.checkout
+color moolre_checkout_toolbar
+drawable ic_checkout_close
 id progressBar
-id toolbar
-id webView
 layout activity_moolre_checkout
 style Theme_Moolre_Checkout

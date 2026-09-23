@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="moolre_checkout_toolbar">#142A4A</color>
     <style name="Theme.Moolre.Checkout" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         
         

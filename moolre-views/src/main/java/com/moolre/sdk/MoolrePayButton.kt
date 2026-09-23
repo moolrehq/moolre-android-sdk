@@ -24,6 +24,7 @@ import com.moolre.sdk.model.MoolreCheckoutSession
 import com.moolre.sdk.model.MoolreConfig
 import com.moolre.sdk.model.MoolreEnvironment
 import com.moolre.sdk.model.MoolrePaymentRequest
+import com.moolre.sdk.model.MoolreReferenceGenerator
 import com.moolre.sdk.model.PaymentParams
 import com.moolre.sdk.model.toPaymentParams
 import com.moolre.sdk.utils.Constants
@@ -74,6 +75,7 @@ class MoolrePayButton @JvmOverloads constructor(
     private var paymentErrorListener: ((errorCode: String, errorMessage: String) -> Unit)? = null
     private var checkoutLauncher: ActivityResultLauncher<MoolreCheckoutSession>? = null
     private var pendingPaymentParams: PaymentParams? = null
+    private var generatedReference: String? = null
 
     init {
         setupAttributes(context, attrs)
@@ -180,21 +182,19 @@ class MoolrePayButton @JvmOverloads constructor(
     private fun setupInternalClickListener() {
         binding.payButton.setOnClickListener {
             findViewTreeLifecycleOwner()?.lifecycleScope?.launch {
+                if (checkoutLauncher == null) {
+                    paymentErrorListener?.invoke(
+                        Constants.ERROR_INVALID_CONFIG,
+                        "Register MoolreCheckoutContract before starting payment."
+                    )
+                    return@launch
+                }
                 showLoading(true)
                 prepareCheckoutSession().fold(
                     onSuccess = { session ->
                         try {
                             val launcher = checkoutLauncher
-                            if (launcher == null) {
-                                paymentErrorListener?.invoke(
-                                    Constants.ERROR_INVALID_CONFIG,
-                                    "Register MoolreCheckoutContract before starting payment."
-                                )
-                                pendingPaymentParams = null
-                                showLoading(false)
-                            } else {
-                                launcher.launch(session)
-                            }
+                            launcher!!.launch(session)
                         } catch (e: Exception) {
                             Log.e("MoolrePayButton", "Failed to launch MoolreCheckoutActivity", e)
                             paymentErrorListener?.invoke("LAUNCH_FAILED", "Could not start payment activity: ${e.message}")
@@ -270,6 +270,7 @@ class MoolrePayButton @JvmOverloads constructor(
                 is MoolreCheckoutResult.Failed -> paymentErrorListener?.invoke(result.code, result.message)
             }
             pendingPaymentParams = null
+            generatedReference = null
             showLoading(false)
         }
     }
@@ -283,13 +284,14 @@ class MoolrePayButton @JvmOverloads constructor(
     }
 
     override fun onSaveInstanceState(): Parcelable {
-        return SavedState(super.onSaveInstanceState(), pendingPaymentParams)
+        return SavedState(super.onSaveInstanceState(), pendingPaymentParams, generatedReference)
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
         if (state is SavedState) {
             super.onRestoreInstanceState(state.superState)
             pendingPaymentParams = state.toPaymentParams()
+            generatedReference = state.generatedReference()
             showLoading(pendingPaymentParams != null)
         } else {
             super.onRestoreInstanceState(state)
@@ -339,11 +341,14 @@ class MoolrePayButton @JvmOverloads constructor(
             )
         }
 
+        val effectiveReference = reference?.takeIf { it.isNotBlank() }
+            ?: generatedReference
+            ?: MoolreReferenceGenerator.generate().also { generatedReference = it }
         val request = MoolrePaymentRequest(
             amount = amount,
             currency = currency,
             email = email ?: "",
-            reference = reference ?: "",
+            reference = effectiveReference,
             webhookUrl = webhookUrl,
             redirectUrl = redirectUrl,
             reusable = reusable,
@@ -359,13 +364,28 @@ class MoolrePayButton @JvmOverloads constructor(
                 )
             )
         }
-        pendingPaymentParams = null
         return paymentCoordinator.initiatePayment(params).also { result ->
             if (result.isSuccess) pendingPaymentParams = params
         }
     }
 
     private fun updateButtonLabel() {
+        binding.payButton.text = if (showAmountOnButton && amount > BigDecimal.ZERO) {
+            listOf(buttonLabel, "$currency ${amount.setScale(2, java.math.RoundingMode.HALF_UP).toPlainString()}")
+                .joinToString(" " + Char(0x2022) + " ")
+        } else {
+            buttonLabel
+        }
+    }
+
+    private fun legacyUpdateButtonLabel() {
+        binding.payButton.text = if (showAmountOnButton && amount > BigDecimal.ZERO) {
+            "$buttonLabel • $currency ${amount.setScale(2, java.math.RoundingMode.HALF_UP).toPlainString()}"
+        } else {
+            buttonLabel
+        }
+        return
+
         binding.payButton.text = if (showAmountOnButton && amount > BigDecimal.ZERO) {
             "$buttonLabel • $currency ${amount.setScale(2, java.math.RoundingMode.HALF_UP).toPlainString()}"
         } else {
@@ -376,8 +396,13 @@ class MoolrePayButton @JvmOverloads constructor(
     private class SavedState : BaseSavedState {
         private val paymentState: Bundle
 
-        constructor(superState: Parcelable?, params: PaymentParams?) : super(superState) {
+        constructor(
+            superState: Parcelable?,
+            params: PaymentParams?,
+            generatedReference: String?
+        ) : super(superState) {
             paymentState = Bundle().apply {
+                putString(KEY_GENERATED_REFERENCE, generatedReference)
                 params?.let {
                     putString(KEY_AMOUNT, it.amount.toPlainString())
                     putString(KEY_ENVIRONMENT, it.environment.name)
@@ -421,6 +446,8 @@ class MoolrePayButton @JvmOverloads constructor(
             }.getOrNull()
         }
 
+        fun generatedReference(): String? = paymentState.getString(KEY_GENERATED_REFERENCE)
+
         override fun writeToParcel(destination: Parcel, flags: Int) {
             super.writeToParcel(destination, flags)
             destination.writeBundle(paymentState)
@@ -439,6 +466,7 @@ class MoolrePayButton @JvmOverloads constructor(
             private const val KEY_REDIRECT = "redirect"
             private const val KEY_REUSABLE = "reusable"
             private const val KEY_EXPIRATION = "expiration"
+            private const val KEY_GENERATED_REFERENCE = "generated_reference"
 
             @JvmField
             val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {

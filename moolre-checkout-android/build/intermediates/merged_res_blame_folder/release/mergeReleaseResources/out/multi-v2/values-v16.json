@@ -1,0 +1,36 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.moolre.sdk.checkout.moolre-checkout-android-mergeReleaseResources-30:/values-v16/values-v16.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\fresh\\.gradle\\caches\\8.11.1\\transforms\\c4eb603b908899142d8fcd555784ade7\\transformed\\appcompat-1.7.1\\res\\values-v16\\values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "5",
+                        "endColumns": "12",
+                        "endOffsets": "223"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "com.moolre.sdk.checkout.moolre-checkout-android-release-32:/values-v16/values-v16.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\fresh\\.gradle\\caches\\8.11.1\\transforms\\c4eb603b908899142d8fcd555784ade7\\transformed\\appcompat-1.7.1\\res\\values-v16\\values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "5",
+                        "endColumns": "12",
+                        "endOffsets": "223"
+                    }
+                }
+            ]
+        }
+    ]
+}

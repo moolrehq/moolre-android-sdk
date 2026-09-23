@@ -2,7 +2,7 @@
 
 Moolre Android SDK V1 provides hosted Moolre checkout for Android applications
 using either XML/Views or Jetpack Compose. Both entry points share the same
-payment-link, WebView checkout, and transaction-verification implementation.
+payment-link, Custom Tabs checkout, and transaction-verification implementation.
 
 ## Requirements
 
@@ -38,18 +38,73 @@ Two complete checkout examples are included:
 - `example-app` — XML/View checkout with Activity Result handling and a result
   screen.
 
-Open the project in Android Studio, update the sample merchant values, and run
+Open the project in Android Studio, configure local sandbox credentials, and run
 the selected app on an Android 7.0+ device or emulator.
 
-### Replace demo credentials
+### Configure credentials for the included samples
 
-- Compose: edit the `MoolreConfig` block in
-  `app/src/main/java/com/moolre/moolre_android_sdk/MainActivity.kt`.
-- XML: edit `environment`, `apiUser`, `publicKey`, and `accountNumber` in
-  `example-app/src/main/java/com/moolre/example/ui/checkout/CheckoutViewModel.kt`.
+The two included sample apps use one project-level file:
+`<sdk-root>/local.properties`. Gradle reads it when the project is configured
+and exposes the values to the samples through generated `BuildConfig` fields.
+The Compose sample is `app`; the XML sample is `example-app`.
 
-Keep credentials in local configuration or a secret-injection mechanism in
-real applications; do not commit them to source control.
+1. Copy `local.properties.example` to `local.properties` in the SDK root.
+2. Replace all four placeholder values with credentials from the same Moolre
+   environment:
+
+```properties
+moolre.environment=SANDBOX
+moolre.apiUser=your-sandbox-api-user
+moolre.publicKey=your-sandbox-public-key
+moolre.accountNumber=your-sandbox-account-number
+```
+
+3. Sync Gradle and rebuild the sample you want to run.
+
+The property names are:
+
+| Property | Meaning |
+| --- | --- |
+| `moolre.environment` | `SANDBOX` or `LIVE`; controls payment-link and status endpoints |
+| `moolre.apiUser` | Moolre API user for the selected environment |
+| `moolre.publicKey` | Public API key for the selected environment |
+| `moolre.accountNumber` | Moolre account/wallet number for the selected environment |
+
+To test production, change the environment and every credential together:
+
+```properties
+moolre.environment=LIVE
+moolre.apiUser=your-live-api-user
+moolre.publicKey=your-live-public-key
+moolre.accountNumber=your-live-account-number
+```
+
+Never mix a sandbox API user, public key, or account number with `LIVE`, or
+live credentials with `SANDBOX`.
+
+`local.properties` is ignored by Git. Keep real credentials there only for
+local sample testing; never commit it or paste real credentials into Kotlin,
+XML, README files, screenshots, or issue reports.
+
+### Configure a published SDK integration
+
+`local.properties` is a sample-app convenience and is not read by the
+published library. In your own app, pass the same values through `MoolreConfig`
+(Compose) or the XML/View button properties:
+
+```kotlin
+val config = MoolreConfig(
+    environment = MoolreEnvironment.SANDBOX,
+    apiUser = "your-sandbox-api-user",
+    publicKey = "your-sandbox-public-key",
+    accountNumber = "your-sandbox-account-number"
+)
+```
+
+For XML/View, set `environment`, `apiUser`, `publicKey`, and `accountNumber`
+on `MoolrePayButton` before starting checkout. Use server-side secret
+injection or a backend-owned payment flow for production credentials whenever
+possible; an Android APK can be inspected by its user.
 
 ## Environment selection
 
@@ -66,40 +121,45 @@ The request uses `X-API-USER` and `X-API-PUBKEY` headers in both environments.
 
 ### Switch the included samples
 
-For the Compose sample, edit `app/src/main/java/com/moolre/moolre_android_sdk/MainActivity.kt`:
+Set the same environment in `local.properties`:
 
-```kotlin
-environment = MoolreEnvironment.SANDBOX // testing
-// environment = MoolreEnvironment.LIVE // production
+```properties
+moolre.environment=SANDBOX
 ```
 
-For the XML sample, edit
-`example-app/src/main/java/com/moolre/example/ui/checkout/CheckoutViewModel.kt`:
-
-```kotlin
-val environment = MoolreEnvironment.SANDBOX // testing
-// val environment = MoolreEnvironment.LIVE // production
-```
+Use `LIVE` only after replacing all credentials with live credentials. Never
+mix sandbox and live credentials, references, or API responses.
 
 When switching to `LIVE`, replace the API user, public key, account number,
 and payment references with live values. A sandbox credential cannot be used
-against the live endpoints.
+against the live endpoints. After changing `local.properties`, sync Gradle or
+rebuild so the generated `BuildConfig` values are refreshed.
 
 ## Payment flow
 
-1. Create a `MoolrePaymentRequest` with a positive amount, customer email, and
-   unique order reference.
+1. Create a `MoolrePaymentRequest` with a positive amount and customer email.
+   Omit `reference` for a fresh SDK-generated external reference, or provide a
+   unique merchant order reference.
 2. The SDK posts a payment-link request and receives an authorization URL.
-3. The checkout Activity loads that HTTPS URL in a WebView.
+3. The checkout Activity opens that HTTPS URL in a Chrome Custom Tab.
 4. Moolre redirects to the configured in-app `redirectUrl` with a reference.
    An optional `webhookUrl` receives the server-side callback.
-5. The SDK verifies the reference with the matching environment's status API.
+5. The SDK verifies the original merchant external reference with the matching
+   environment's status API.
 
 The V1 client reports success only when the status response envelope is
 `status == 1`, the transaction status is successful, and the verified
-`externalref` exactly matches the reference returned by checkout. The client
-does not compare amount or currency. Your server should still validate the
-expected amount, currency, account ownership, and order state before fulfilment.
+`externalref` exactly matches the original payment request. The checkout
+redirect may contain either the merchant external reference or Moolre's
+generated transaction reference; both are validated against the prepared
+session. The client does not compare amount or currency. Your server should
+still validate the expected amount, currency, account ownership, and order
+state before fulfilment.
+
+If the status endpoint reports a successful API request with a pending
+transaction status, the coordinator performs up to three status checks with a
+short delay before returning verification failure. Network and authentication
+errors are returned immediately so the host can decide how to reconcile them.
 
 ## Configuration
 
@@ -119,9 +179,16 @@ val config = MoolreConfig(
 
 `redirectUrl` defaults to `moolre://payment-callback` and must contain a URI
 scheme and host. The checkout Activity matches its scheme, host, port, and path,
-then reads the `reference` query parameter. The SDK consumes the redirect
-inside its WebView, so no host-app intent filter is required. `webhookUrl` is
-optional and should be an HTTPS endpoint owned by your server.
+then reads the `reference` query parameter. The SDK's checkout Activity
+catches this redirect itself via its own intent-filter, whose scheme/host
+come from the `moolreRedirectScheme` / `moolreRedirectHost` manifest
+placeholders - **every app must set both** in its own
+`build.gradle`(`.kts`) to match whatever `redirectUrl` it uses (the example
+above needs `"moolre"` / `"payment-callback"`); there is no built-in default
+and the build fails without them. See
+[`moolre-checkout-android/README.md`](moolre-checkout-android/README.md) for
+details. `webhookUrl` is optional and should be an HTTPS endpoint owned by
+your server.
 
 Use a unique reference for every order and construct monetary values from
 strings rather than `Double` values:
@@ -135,7 +202,10 @@ val amount = BigDecimal("25.00")
 - `amount`: positive `BigDecimal` in major currency units.
 - `currency`: currency code, default `GHS`.
 - `email`: required customer email.
-- `reference`: required unique merchant reference.
+- `reference`: optional merchant reference. When omitted or blank, the SDK
+  generates one `moolre-<UUID>` reference for the payment attempt and reuses it
+  while retrying that attempt. An explicitly supplied reference is preserved
+  and must be unique.
 - `webhookUrl` / `redirectUrl`: optional per-payment overrides.
 - `reusable`: whether the payment link can be reused, default `false`.
 - `expirationTimeMinutes`: optional expiry, minimum `1`.
@@ -161,7 +231,6 @@ private fun setupMoolreButton() {
         amount = BigDecimal("25.00")
         currency = "GHS"
         email = "customer@example.com"
-        reference = "order-1001"
         webhookUrl = "https://merchant.example.com/moolre/webhook"
         redirectUrl = "moolre://payment-callback"
 
@@ -200,8 +269,7 @@ fun CheckoutButton() {
     val payment = MoolrePaymentRequest(
         amount = BigDecimal("25.00"),
         currency = "GHS",
-        email = "customer@example.com",
-        reference = "order-1001"
+        email = "customer@example.com"
     )
     var result by remember { mutableStateOf<MoolrePaymentResult?>(null) }
 
@@ -226,7 +294,8 @@ fun CheckoutButton() {
 }
 ```
 
-`MoolrePayButton` disables itself while initiation or verification runs, and
+`MoolrePayButton` disables itself while initiation or verification runs,
+preserves the external reference across transient initiation failures, and
 `rememberMoolrePaymentLauncher` saves pending parameters across Activity
 recreation. Use `MoolreTheme` for Moolre colors, or override the button's
 `containerColor`, `contentColor`, `borderColor`, `borderWidth`, or `shape`.
@@ -237,13 +306,29 @@ Both integrations expose `MoolrePaymentResult.Success`, `Cancelled`, and
 `Failure(code, message)`. Common codes include `INVALID_CONFIG`,
 `INVALID_AMOUNT`, `INITIATION_FAILED`, `VERIFICATION_FAILED`, `WEBVIEW_ERROR`,
 `USER_CANCELLED`, `MISSING_REFERENCE`, `REFERENCE_MISMATCH`, and
-`UNSUPPORTED_REDIRECT`.
+`UNSUPPORTED_REDIRECT`, `CHECKOUT_PAGE_NOT_FOUND`.
 
 Treat error messages as diagnostics rather than stable UI copy. Never treat a
 browser redirect as proof of payment. Keep the order pending until your backend
 verifies the reference and checks amount, currency, account number, and order
 state. Make fulfilment idempotent and do not log private credentials or full
 payment payloads in release builds.
+
+## GitHub and secret-safety checklist
+
+Before pushing this repository:
+
+- Commit `local.properties.example`, but never commit `local.properties`.
+- Keep only placeholders in documentation and sample source.
+- Confirm `local.properties` is ignored by `.gitignore`.
+- Search the staged diff for API users, public keys, account numbers, full
+  payment URLs, and debug logs containing credentials.
+- If a credential was ever committed, rotate it in Moolre; deleting the file
+  is not enough because Git history retains it.
+
+The included debug samples can use `local.properties`. A released Android
+application should prefer a backend-owned payment initiation and verification
+flow for production secrets.
 
 ## Testing and publishing
 
@@ -267,7 +352,7 @@ publishing.
 | Artifact | Purpose |
 | --- | --- |
 | `android-sdk-core` | Models, gateway, payment-link service, and verification coordinator |
-| `android-sdk-checkout` | HTTPS WebView checkout Activity and Activity Result contract |
+| `android-sdk-checkout` | HTTPS Custom Tabs checkout Activity and Activity Result contract |
 | `android-sdk-views` | XML/custom View `MoolrePayButton` |
 | `android-sdk-compose` | Jetpack Compose `MoolrePayButton` and `MoolreTheme` |
 

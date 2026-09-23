@@ -84,7 +84,6 @@ class CheckoutFragment : Fragment() {
             publicKey = viewModel.publicKey
             accountNumber = viewModel.accountNumber
             email = viewModel.email
-            reference = viewModel.customReference // This will generate a new one
             webhookUrl = viewModel.webhookUrl
             redirectUrl = viewModel.redirectUrl
             // Amount is set via observer

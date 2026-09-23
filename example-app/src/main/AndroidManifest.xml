@@ -17,14 +17,11 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <!-- Deep Link Intent Filter -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="moolre-example" android:host="payment-callback" />
-            </intent-filter>
         </activity>
+        <!--
+          The payment redirect deep link ("moolre-example://payment-callback") is now caught
+          directly by MoolreCheckoutActivity (see moolre-checkout-android's manifest and the
+          moolreRedirectScheme/moolreRedirectHost placeholders above), not by MainActivity.
+        -->
     </application>
 </manifest>

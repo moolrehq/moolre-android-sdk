@@ -1,7 +1,7 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:1:1-10:12
-INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:1:1-10:12
+ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:1:1-27:12
+INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:1:1-27:12
 	package
 		INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml
 	xmlns:android
@@ -11,15 +11,37 @@ ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout
 	android:name
 		ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:2:22-64
 application
-ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:4:5-9:19
+ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:4:5-26:19
 activity#com.moolre.sdk.MoolreCheckoutActivity
-ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:5:9-8:60
+ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:5:9-25:20
+	android:launchMode
+		ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:8:13-44
 	android:exported
-		ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:7:13-37
+		ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:7:13-36
 	android:theme
-		ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:8:13-57
+		ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:9:13-57
 	android:name
 		ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:6:13-65
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:host:${moolreRedirectHost}+data:scheme:${moolreRedirectScheme}
+ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:17:13-24:29
+action#android.intent.action.VIEW
+ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:18:17-69
+	android:name
+		ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:18:25-66
+category#android.intent.category.DEFAULT
+ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:19:17-76
+	android:name
+		ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:19:27-73
+category#android.intent.category.BROWSABLE
+ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:20:17-78
+	android:name
+		ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:20:27-75
+data
+ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:21:17-23:60
+	android:host
+		ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:23:21-57
+	android:scheme
+		ADDED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml:22:21-61
 uses-sdk
 INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\fresh\AndroidStudioProjects\moolreandroidsdk\moolre-checkout-android\src\main\AndroidManifest.xml

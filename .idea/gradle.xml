@@ -12,7 +12,10 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/example-app" />
-            <option value="$PROJECT_DIR$/moolre-sdk" />
+            <option value="$PROJECT_DIR$/moolre-checkout-android" />
+            <option value="$PROJECT_DIR$/moolre-core" />
+            <option value="$PROJECT_DIR$/moolre-sdk-compose" />
+            <option value="$PROJECT_DIR$/moolre-views" />
           </set>
         </option>
       </GradleProjectSettings>

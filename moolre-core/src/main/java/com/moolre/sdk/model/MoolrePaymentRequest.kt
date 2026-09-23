@@ -9,7 +9,7 @@ data class MoolrePaymentRequest(
     val amount: BigDecimal,
     val currency: String = "GHS",
     val email: String,
-    val reference: String,
+    val reference: String? = null,
     val webhookUrl: String? = null,
     val redirectUrl: String? = null,
     val reusable: Boolean = false,
@@ -29,7 +29,8 @@ fun MoolrePaymentRequest.toPaymentParams(config: MoolreConfig): PaymentParams {
         accountNumber = config.accountNumber,
         currency = currency,
         email = email,
-        reference = reference,
+        reference = reference?.takeIf { it.isNotBlank() }
+            ?: MoolreReferenceGenerator.generate(),
         callback = webhookUrl ?: config.webhookUrl,
         redirect = redirectUrl ?: config.redirectUrl,
         reusable = reusable,

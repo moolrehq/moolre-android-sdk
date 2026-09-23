@@ -9,8 +9,28 @@
     <application>
         <activity
             android:name="com.moolre.sdk.MoolreCheckoutActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Moolre.Checkout" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.Moolre.Checkout" >
+
+            <!--
+              Receives the Custom Tabs redirect back into the app. The scheme/host must match
+              the redirectUrl passed to MoolreCheckoutSession. There is no default: every
+              consuming app must set moolreRedirectScheme/moolreRedirectHost in its own
+              app-level manifestPlaceholders (build fails at manifest-merge time otherwise).
+              See moolre-checkout-android/README.md.
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="${moolreRedirectHost}"
+                    android:scheme="${moolreRedirectScheme}" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

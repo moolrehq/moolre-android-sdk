@@ -16,6 +16,34 @@ dependencies {
 The consuming application must already be Compose-enabled. The artifact brings
 the core and Android checkout runtime transitively.
 
+## Credentials and environment
+
+The included Compose sample (`app`) reads the SDK-root `local.properties`
+through generated `BuildConfig` fields. Copy `local.properties.example` to
+`local.properties` and set:
+
+```properties
+moolre.environment=SANDBOX
+moolre.apiUser=your-sandbox-api-user
+moolre.publicKey=your-sandbox-public-key
+moolre.accountNumber=your-sandbox-account-number
+```
+
+In a published Compose app, pass the values directly to `MoolreConfig`:
+
+```kotlin
+val config = MoolreConfig(
+    environment = MoolreEnvironment.SANDBOX,
+    apiUser = "your-sandbox-api-user",
+    publicKey = "your-sandbox-public-key",
+    accountNumber = "your-sandbox-account-number"
+)
+```
+
+Change `environment` and all credentials together for production:
+`MoolreEnvironment.LIVE` with live values. Never commit real credentials or
+`local.properties`.
+
 ## Checkout button
 
 ```kotlin
@@ -34,8 +62,7 @@ fun CheckoutButton() {
     val payment = MoolrePaymentRequest(
         amount = BigDecimal("25.00"),
         currency = "GHS",
-        email = "customer@example.com",
-        reference = "order-1001"
+        email = "customer@example.com"
     )
     var result by remember { mutableStateOf<MoolrePaymentResult?>(null) }
 
@@ -60,7 +87,10 @@ fun CheckoutButton() {
 }
 ```
 
-Use a unique reference for every order and construct amounts with
+When `reference` is omitted or blank, the SDK generates one
+`moolre-<UUID>` external reference for the payment attempt and reuses it when
+retrying a transient initiation failure. If you supply a merchant order
+reference, it is preserved exactly and must be unique. Construct amounts with
 `BigDecimal("25.00")`, not a `Double`. `MoolrePayButton` disables itself while
 initiation or verification runs, and the launcher saves pending parameters
 across host Activity recreation.
@@ -87,9 +117,11 @@ when (val paymentResult = result) {
 ```
 
 Success requires API `status == 1`, a successful transaction status, and an
-exact transaction-reference match. The V1 client intentionally does not
-compare amount or currency. Check those values against your own pending order
-on the server before delivering value.
+exact external-reference match. The checkout runtime accepts either the
+merchant external reference or Moolre's generated transaction reference in the
+redirect. The V1 client intentionally does not compare amount or currency.
+Check those values against your own pending order on the server before
+delivering value.
 
 ## Theming and redirect URL
 
@@ -99,6 +131,10 @@ the button's `containerColor`, `contentColor`, `borderColor`, `borderWidth`, or
 content, a 1dp `#FDB93C` border, and a light-grey disabled background.
 
 `redirectUrl` defaults to `moolre://payment-callback` and must contain a URI
-scheme and host. The SDK consumes this redirect inside its checkout WebView, so
-the host application does not need to add a deep-link intent filter.
+scheme and host. Checkout runs in a Chrome Custom Tab, and the SDK's checkout
+Activity catches this redirect itself via its own intent-filter. **Every**
+app must set the `moolreRedirectScheme` / `moolreRedirectHost` manifest
+placeholders in its `build.gradle`(`.kts`) to match whatever `redirectUrl` it
+uses - there is no built-in default and the build fails without them. See
+[`moolre-checkout-android/README.md`](../moolre-checkout-android/README.md).
 `webhookUrl` is an optional server-side callback and should normally be HTTPS.

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Matches moolre_primary in android-sdk-views. Duplicated here rather than shared because
+      this module cannot depend on android-sdk-views (the dependency direction is the reverse).
+    -->
+    <color name="moolre_checkout_toolbar">#142A4A</color>
+</resources>

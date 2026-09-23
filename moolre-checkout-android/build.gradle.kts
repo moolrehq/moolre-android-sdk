@@ -44,6 +44,7 @@ dependencies {
     api(libs.material)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.browser)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

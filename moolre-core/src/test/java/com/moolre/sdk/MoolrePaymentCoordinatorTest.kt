@@ -26,6 +26,7 @@ class MoolrePaymentCoordinatorTest {
         assertTrue(result.isSuccess)
         assertEquals("https://checkout.example/pay", result.getOrThrow().authorizationUrl)
         assertEquals("ref-123", result.getOrThrow().reference)
+        assertEquals("ref-123", result.getOrThrow().externalReference)
     }
 
     @Test
@@ -57,6 +58,24 @@ class MoolrePaymentCoordinatorTest {
 
         assertTrue(result is MoolrePaymentResult.Success)
         assertEquals("ref-123", (result as MoolrePaymentResult.Success).reference)
+    }
+
+    @Test
+    fun verifyPayment_usesMerchantReferenceWhenRedirectUsesGatewayReference() = runBlocking {
+        val gateway = FakeGateway(
+            verificationResponse = VerificationResponse(
+                status = 1,
+                reference = "merchant-order-42",
+                amount = BigDecimal("10.00"),
+                currency = "GHS"
+            )
+        )
+        val coordinator = MoolrePaymentCoordinator(gateway)
+
+        val result = coordinator.verifyPayment(params().copy(reference = "merchant-order-42"), "gateway-ref-42")
+
+        assertTrue(result is MoolrePaymentResult.Success)
+        assertEquals("merchant-order-42", gateway.lastVerifiedReference)
     }
 
     @Test
@@ -97,6 +116,26 @@ class MoolrePaymentCoordinatorTest {
     }
 
     @Test
+    fun verifyPayment_retriesPendingTransactionBeforeFailing() = runBlocking {
+        val gateway = FakeGateway(
+            verificationResponses = listOf(
+                VerificationResponse(status = 1, transactionStatus = 0, reference = "ref-123", amount = BigDecimal("10.00")),
+                VerificationResponse(status = 1, transactionStatus = 1, reference = "ref-123", amount = BigDecimal("10.00"))
+            )
+        )
+        val coordinator = MoolrePaymentCoordinator(
+            gateway = gateway,
+            verificationAttempts = 2,
+            verificationDelayMillis = 0
+        )
+
+        val result = coordinator.verifyPayment(params(), "redirect-ref")
+
+        assertTrue(result is MoolrePaymentResult.Success)
+        assertEquals(2, gateway.verificationCallCount)
+    }
+
+    @Test
     fun verifyPayment_returnsFailureForMismatchedVerifiedReference() = runBlocking {
         val coordinator = MoolrePaymentCoordinator(
             FakeGateway(
@@ -122,7 +161,7 @@ class MoolrePaymentCoordinatorTest {
         val result = coordinator.verifyPayment(params(), " ")
 
         assertTrue(result is MoolrePaymentResult.Failure)
-        assertEquals(Constants.ERROR_VERIFICATION_FAILED, (result as MoolrePaymentResult.Failure).code)
+        assertEquals(Constants.ERROR_MISSING_REFERENCE, (result as MoolrePaymentResult.Failure).code)
     }
 
     private fun params() = PaymentParams(
@@ -149,8 +188,12 @@ class MoolrePaymentCoordinatorTest {
             currency = "GHS"
         ),
         private val throwOnInitiate: Exception? = null,
-        private val throwOnVerify: Exception? = null
+        private val throwOnVerify: Exception? = null,
+        private val verificationResponses: List<VerificationResponse> = emptyList()
     ) : MoolrePaymentGateway {
+        var lastVerifiedReference: String? = null
+        var verificationCallCount: Int = 0
+
         override suspend fun initiatePayment(params: PaymentParams): PaymentResponse {
             throwOnInitiate?.let { throw it }
             return paymentResponse
@@ -164,7 +207,9 @@ class MoolrePaymentCoordinatorTest {
             accountNumber: String
         ): VerificationResponse {
             throwOnVerify?.let { throw it }
-            return verificationResponse
+            lastVerifiedReference = reference
+            verificationCallCount += 1
+            return verificationResponses.getOrNull(verificationCallCount - 1) ?: verificationResponse
         }
     }
 }

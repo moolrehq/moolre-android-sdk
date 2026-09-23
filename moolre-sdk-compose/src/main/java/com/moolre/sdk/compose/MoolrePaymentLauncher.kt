@@ -23,6 +23,7 @@ import com.moolre.sdk.model.MoolreCheckoutSession
 import com.moolre.sdk.model.MoolreConfig
 import com.moolre.sdk.model.MoolreEnvironment
 import com.moolre.sdk.model.MoolrePaymentRequest
+import com.moolre.sdk.model.MoolreReferenceGenerator
 import com.moolre.sdk.model.PaymentParams
 import com.moolre.sdk.model.toPaymentParams
 import com.moolre.sdk.utils.Constants
@@ -33,7 +34,8 @@ import java.math.BigDecimal
 
 internal class MoolrePaymentLauncherState(
     var isProcessing: Boolean = false,
-    var pendingPaymentParams: PaymentParams? = null
+    var pendingPaymentParams: PaymentParams? = null,
+    var retryReference: String? = null
 )
 
 internal val MoolrePaymentLauncherStateSaver: Saver<MoolrePaymentLauncherState, Any> =
@@ -53,7 +55,8 @@ internal val MoolrePaymentLauncherStateSaver: Saver<MoolrePaymentLauncherState, 
                 params?.callback.orEmpty(),
                 params?.redirect.orEmpty(),
                 params?.reusable ?: false,
-                params?.expirationTimeMinutes ?: -1
+                params?.expirationTimeMinutes ?: -1,
+                state.retryReference.orEmpty()
             )
         },
         restore = { values ->
@@ -80,7 +83,9 @@ internal val MoolrePaymentLauncherStateSaver: Saver<MoolrePaymentLauncherState, 
             }
             MoolrePaymentLauncherState(
                 isProcessing = (values.getOrNull(0) as? Boolean == true) && params != null,
-                pendingPaymentParams = params
+                pendingPaymentParams = params,
+                retryReference = (values.getOrNull(13) as? String)?.takeIf { it.isNotBlank() }
+                    ?: params?.reference
             )
         }
     )
@@ -120,8 +125,11 @@ class MoolrePaymentLauncher internal constructor(
     fun launch(request: MoolrePaymentRequest) {
         if (isProcessing) return
 
+        val effectiveReference = request.reference?.takeIf { it.isNotBlank() }
+            ?: savedState.retryReference
+            ?: MoolreReferenceGenerator.generate()
         val params = try {
-            request.toPaymentParams(config)
+            request.copy(reference = effectiveReference).toPaymentParams(config)
         } catch (error: IllegalArgumentException) {
             emitResult(
                 MoolrePaymentResult.Failure(
@@ -132,6 +140,8 @@ class MoolrePaymentLauncher internal constructor(
             return
         }
 
+        pendingPaymentParams = params
+        savedState.retryReference = params.reference
         isProcessing = true
         scope.launch {
             try {
@@ -141,7 +151,7 @@ class MoolrePaymentLauncher internal constructor(
                         launchCheckout(session)
                     },
                     onFailure = { error ->
-                        complete(
+                        finishInitiation(
                             MoolrePaymentResult.Failure(
                                 code = (error as? MoolrePaymentException)?.code
                                     ?: Constants.ERROR_INITIATION_FAILED,
@@ -153,7 +163,7 @@ class MoolrePaymentLauncher internal constructor(
             } catch (error: CancellationException) {
                 throw error
             } catch (error: Exception) {
-                complete(
+                finishInitiation(
                     MoolrePaymentResult.Failure(
                         code = Constants.ERROR_LAUNCH_FAILED,
                         message = error.message ?: "Could not open payment checkout."
@@ -189,6 +199,12 @@ class MoolrePaymentLauncher internal constructor(
 
     private fun complete(result: MoolrePaymentResult) {
         pendingPaymentParams = null
+        savedState.retryReference = null
+        isProcessing = false
+        emitResult(result)
+    }
+
+    private fun finishInitiation(result: MoolrePaymentResult) {
         isProcessing = false
         emitResult(result)
     }
