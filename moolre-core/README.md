@@ -24,7 +24,7 @@ environment:
 ```kotlin
 val config = MoolreConfig(
     environment = MoolreEnvironment.SANDBOX, // use LIVE for production
-    apiUser = "your-sandbox-api-user",
+    apiUser = "your-moolre-username",
     publicKey = "your-sandbox-public-key",
     accountNumber = "your-sandbox-account-number"
 )
@@ -47,7 +47,7 @@ val coordinator = MoolrePaymentCoordinator(MoolrePaymentService.create())
 val params = PaymentParams(
     amount = BigDecimal("25.00"),
     environment = MoolreEnvironment.SANDBOX,
-    apiUser = "your-api-user",
+    apiUser = "your-moolre-username",
     publicKey = "your-public-key",
     accountNumber = "your-account-number",
     currency = "GHS",

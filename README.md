@@ -54,7 +54,7 @@ The Compose sample is `app`; the XML sample is `example-app`.
 
 ```properties
 moolre.environment=SANDBOX
-moolre.apiUser=your-sandbox-api-user
+moolre.apiUser=your-moolre-username
 moolre.publicKey=your-sandbox-public-key
 moolre.accountNumber=your-sandbox-account-number
 ```
@@ -74,7 +74,7 @@ To test production, change the environment and every credential together:
 
 ```properties
 moolre.environment=LIVE
-moolre.apiUser=your-live-api-user
+moolre.apiUser=your-moolre-username
 moolre.publicKey=your-live-public-key
 moolre.accountNumber=your-live-account-number
 ```
@@ -95,7 +95,7 @@ published library. In your own app, pass the same values through `MoolreConfig`
 ```kotlin
 val config = MoolreConfig(
     environment = MoolreEnvironment.SANDBOX,
-    apiUser = "your-sandbox-api-user",
+    apiUser = "your-moolre-username",
     publicKey = "your-sandbox-public-key",
     accountNumber = "your-sandbox-account-number"
 )
@@ -169,7 +169,7 @@ import com.moolre.sdk.model.MoolreEnvironment
 
 val config = MoolreConfig(
     environment = MoolreEnvironment.SANDBOX,
-    apiUser = "your-api-user",
+    apiUser = "your-moolre-username",
     publicKey = "your-public-key",
     accountNumber = "your-account-number",
     webhookUrl = "https://merchant.example.com/moolre/webhook",
@@ -225,7 +225,7 @@ private fun setupMoolreButton() {
     binding.moolrePayButton.apply {
         setCheckoutLauncher(checkoutLauncher)
         environment = MoolreEnvironment.SANDBOX
-        apiUser = "your-api-user"
+        apiUser = "your-moolre-username"
         publicKey = "your-public-key"
         accountNumber = "your-account-number"
         amount = BigDecimal("25.00")
@@ -259,7 +259,7 @@ fun CheckoutButton() {
     val config = remember {
         MoolreConfig(
             environment = MoolreEnvironment.SANDBOX,
-            apiUser = "your-api-user",
+            apiUser = "your-moolre-username",
             publicKey = "your-public-key",
             accountNumber = "your-account-number",
             webhookUrl = "https://merchant.example.com/moolre/webhook",

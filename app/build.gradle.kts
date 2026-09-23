@@ -37,7 +37,7 @@ android {
         buildConfigField(
             "String",
             "MOOLRE_API_USER",
-            "\"${localProperty("moolre.apiUser", "replace-with-your-sandbox-api-user").toBuildConfigLiteral()}\""
+            "\"${localProperty("moolre.apiUser", "replace-with-your-moolre-username").toBuildConfigLiteral()}\""
         )
         buildConfigField(
             "String",

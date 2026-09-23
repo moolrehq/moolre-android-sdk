@@ -24,7 +24,7 @@ through generated `BuildConfig` fields. Copy `local.properties.example` to
 
 ```properties
 moolre.environment=SANDBOX
-moolre.apiUser=your-sandbox-api-user
+moolre.apiUser=your-moolre-username
 moolre.publicKey=your-sandbox-public-key
 moolre.accountNumber=your-sandbox-account-number
 ```
@@ -34,7 +34,7 @@ In a published Compose app, pass the values directly to `MoolreConfig`:
 ```kotlin
 val config = MoolreConfig(
     environment = MoolreEnvironment.SANDBOX,
-    apiUser = "your-sandbox-api-user",
+    apiUser = "your-moolre-username",
     publicKey = "your-sandbox-public-key",
     accountNumber = "your-sandbox-account-number"
 )
@@ -52,7 +52,7 @@ fun CheckoutButton() {
     val config = remember {
         MoolreConfig(
             environment = MoolreEnvironment.SANDBOX,
-            apiUser = "your-api-user",
+            apiUser = "your-moolre-username",
             publicKey = "your-public-key",
             accountNumber = "your-account-number",
             webhookUrl = "https://merchant.example.com/moolre/webhook",

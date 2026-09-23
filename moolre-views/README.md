@@ -24,7 +24,7 @@ properties from the same environment:
 
 ```properties
 moolre.environment=SANDBOX
-moolre.apiUser=your-sandbox-api-user
+moolre.apiUser=your-moolre-username
 moolre.publicKey=your-sandbox-public-key
 moolre.accountNumber=your-sandbox-account-number
 ```
@@ -33,7 +33,7 @@ For a published app, set the equivalent button properties before checkout:
 
 ```kotlin
 moolrePayButton.environment = MoolreEnvironment.SANDBOX
-moolrePayButton.apiUser = "your-sandbox-api-user"
+moolrePayButton.apiUser = "your-moolre-username"
 moolrePayButton.publicKey = "your-sandbox-public-key"
 moolrePayButton.accountNumber = "your-sandbox-account-number"
 ```
@@ -72,7 +72,7 @@ private fun setupMoolreButton() {
     binding.moolrePayButton.apply {
         setCheckoutLauncher(checkoutLauncher)
         environment = MoolreEnvironment.SANDBOX
-        apiUser = "your-api-user"
+        apiUser = "your-moolre-username"
         publicKey = "your-public-key"
         accountNumber = "your-account-number"
         amount = BigDecimal("25.00")

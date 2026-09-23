@@ -5,12 +5,12 @@
 # file. Replace every placeholder with credentials from one Moolre environment.
 # Keep SANDBOX for testing:
 moolre.environment=SANDBOX
-moolre.apiUser=replace-with-your-sandbox-api-user
+moolre.apiUser=replace-with-your-moolre-username
 moolre.publicKey=replace-with-your-sandbox-public-key
 moolre.accountNumber=replace-with-your-sandbox-account-number
 #
 # For production, change all four values together:
 # moolre.environment=LIVE
-# moolre.apiUser=replace-with-your-live-api-user
+# moolre.apiUser=replace-with-your-moolre-username
 # moolre.publicKey=replace-with-your-live-public-key
 # moolre.accountNumber=replace-with-your-live-account-number
